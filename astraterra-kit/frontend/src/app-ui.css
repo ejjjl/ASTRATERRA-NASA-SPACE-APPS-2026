@@ -1,0 +1,8 @@
+.busy { position: sticky; top: 8px; z-index: 2000; display: flex; gap: 12px; align-items: center; background: #1f4d33; color: #fff; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.busy-sub { font-size: .85rem; opacity: .85; margin-top: 2px; }
+.spin { width: 18px; height: 18px; flex: none; border: 3px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.dim { opacity: .55; pointer-events: none; transition: opacity .2s; }
+.err-banner { background: #fdecea; border: 1px solid #c0392b; color: #7a2218; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; }
+.data-credit { margin-top: 8px; font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }

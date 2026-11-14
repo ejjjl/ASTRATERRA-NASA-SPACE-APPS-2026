@@ -1,0 +1,5 @@
+.cc-svg { width: 100%; height: auto; display: block; }
+.cc-axis { font-size: 11px; fill: #5a665d; }
+.cc-legend { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 8px 0; font-size: .85rem; }
+.cc-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+.cc-summary { font-weight: 600; margin: 4px 0; }

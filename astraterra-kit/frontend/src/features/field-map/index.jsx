@@ -2,9 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import { useApp } from "../../core/AppState.jsx";
 
+import "./field-map.css";
+
 const LEVEL_COLOR = { high: "#c0392b", medium: "#e6a23c", low: "#4c9f70" };
 const KIND_LABEL = { erosion: "Erosion risk", frost_pocket: "Frost-prone low spot" };
-const MOCK_NOTE = "Pin moved. Zones will update when the backend is connected.";
+
+function slopeWords(p) {
+  if (p == null) return "";
+  if (p < 2) return "nearly flat";
+  if (p < 6) return "gently rolling";
+  if (p < 12) return "rolling to hilly";
+  return "steep";
+}
+
+function Stat({ num, label, words }) {
+  return (
+    <div className="fm-stat">
+      <span className="fm-num">{num}</span>
+      <span className="fm-lab">{label}</span>
+      {words ? <span className="fm-words">{words}</span> : null}
+    </div>
+  );
+}
 
 function FieldMap() {
   const { data, field, setField } = useApp();
@@ -12,18 +31,28 @@ function FieldMap() {
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const zonesRef = useRef(null);
+  const fitKeyRef = useRef(null);
   const [note, setNote] = useState("");
+  const terrain = data.field.terrain;
+  const zoneCount = data.risk_zones?.features?.length ?? 0;
 
   // create map once
   useEffect(() => {
     const map = L.map(ref.current).setView([data.field.lat, data.field.lon], 15);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const sat = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { attribution: "Tiles &copy; Esri, Maxar, Earthstar Geographics", maxZoom: 19 }
+    ).addTo(map);
+    const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
+    });
+    L.control.layers({ Satellite: sat, Street: osm }).addTo(map);
     markerRef.current = L.marker([data.field.lat, data.field.lon]).addTo(map);
     map.on("click", (e) => {
-      setField({ ...(field || {}), lat: +e.latlng.lat.toFixed(5), lon: +e.latlng.lng.toFixed(5), name: "Selected field" });
-      setNote(MOCK_NOTE);
+      const lat = +e.latlng.lat.toFixed(5);
+      const lon = +e.latlng.lng.toFixed(5);
+      setField({ ...(field || {}), lat, lon, name: "Selected field" });
+      setNote(`Pin moved to ${lat}, ${lon}. Climate, soil and terrain update for this spot. Some rotation scores and explanations are still sample text.`);
     });
     mapRef.current = map;
     return () => map.remove();
@@ -49,17 +78,38 @@ function FieldMap() {
             (f.properties.slope_pct != null ? `<br/>Slope about ${f.properties.slope_pct}%` : "")
         ),
     }).addTo(map);
+    // Zoom to the zones when the location changes (not when only a toggle refetches).
+    const key = `${data.field.lat},${data.field.lon}`;
+    const bounds = zonesRef.current.getBounds();
+    if (key !== fitKeyRef.current && bounds.isValid()) {
+      map.fitBounds(bounds.pad(0.4), { maxZoom: 17 });
+      fitKeyRef.current = key;
+    }
   }, [data.risk_zones]);
 
   return (
     <>
-      <p className="hint">Click the map to pick your field. Colored zones show erosion and frost risk.</p>
+      <p className="hint">Click the map to pick your field. Colored zones mark steep, erosion-prone ground and low spots where cold air collects.</p>
       <div ref={ref} className="map" />
       <ul className="legend">
         <li><span className="dot" style={{ background: LEVEL_COLOR.high }} /> High</li>
         <li><span className="dot" style={{ background: LEVEL_COLOR.medium }} /> Medium</li>
         <li><span className="dot" style={{ background: LEVEL_COLOR.low }} /> Low</li>
       </ul>
+      {zoneCount === 0 && (
+        <p className="hint">No risk zones were flagged at this spot. The land here is close to flat.</p>
+      )}
+      {terrain && (
+        <>
+          <div className="fm-stats">
+            {data.field.elevation_m != null && <Stat num={`${data.field.elevation_m} m`} label="Elevation" />}
+            <Stat num={`${terrain.field_slope_pct}%`} label="Average slope" words={slopeWords(terrain.field_slope_pct)} />
+            <Stat num={`${terrain.max_slope_pct}%`} label="Steepest spot" words={slopeWords(terrain.max_slope_pct)} />
+            <Stat num={`${terrain.relief_m} m`} label="Highest to lowest" />
+          </div>
+          <p className="hint">Terrain source: {terrain.source}.</p>
+        </>
+      )}
       {note && <p className="hint">{note}</p>}
     </>
   );
