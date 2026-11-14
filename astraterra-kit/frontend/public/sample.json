@@ -7,7 +7,8 @@
       "Added climate.yearly (one row per year with its year type)",
       "Added replay to each rotation (one entry per past year: ok / stress / fail)",
       "data_years now 2005-2025 (21 years); water_stress.years_total = 21",
-      "Alternative rotations: bare-month evidence source is the crop calendar, not MODIS NDVI"
+      "Alternative rotations: bare-month evidence source is the crop calendar, not MODIS NDVI",
+      "soil.water_per_metre_mm added (plant-available water from texture); soil.source lists every field: SoilGrids | farmer_override | default"
     ]
   },
   "request_example": {
@@ -54,8 +55,11 @@
       "sand_pct": 22,
       "organic_carbon_pct": 2.1,
       "ph": 6.2,
+      "water_per_metre_mm": 155,
       "source": {
         "clay_pct": "SoilGrids",
+        "sand_pct": "SoilGrids",
+        "organic_carbon_pct": "SoilGrids",
         "ph": "farmer_override"
       }
     },

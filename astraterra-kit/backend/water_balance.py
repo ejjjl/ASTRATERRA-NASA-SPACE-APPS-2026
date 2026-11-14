@@ -1,5 +1,5 @@
 from crops import year_kc
-from crops import MAIN_CROP_KC
+from crops import MAIN_CROP_KC, ROOT_DEPTH_M
 
 STRESS_LINE = 0.5   # FAO-56: crop is stressed below 50% of available soil water
 """
@@ -50,22 +50,27 @@ OK_BELOW = 15      # season stress below 15%  -> "ok"
 FAIL_FROM = 35     # season stress 35% or more -> "fail" (in between = "stress")
 
 
-def simulate_rotation(monthly, sequence, capacity_mm):
+def simulate_rotation(monthly, sequence, water_per_m_mm):
     """
     Run a rotation through every past year, carrying soil water from year to year.
       monthly:  output of features.monthly_by_year (one row per year+month)
       sequence: one dict per rotation year, e.g.
                 [{"main_crop": "corn", "cover_crop": "cereal_rye"},
                  {"main_crop": "soybean", "cover_crop": None}]
+      water_per_m_mm: plant-available water per metre of soil (from soil.py)
+    The bucket size changes each year with the crop's root depth:
+      bucket = water per metre x root depth (alfalfa 1.5 m reaches more than soybean 0.8 m)
     Returns the replay: one dict per year.
     """
     years = sorted(monthly.index.get_level_values("year").unique())
-    water_mm = capacity_mm          # assume the soil starts full
+    first_crop = sequence[0]["main_crop"]
+    water_mm = water_per_m_mm * ROOT_DEPTH_M[first_crop]   # assume the soil starts full
     replay = []
 
     for n, year in enumerate(years):
         step = sequence[n% len(sequence)]            # which rotation year is this? (corn, soybean, corn, ...)
         kc, bare_months = year_kc(step["main_crop"], step["cover_crop"])
+        capacity_mm = water_per_m_mm * ROOT_DEPTH_M[step["main_crop"]]   # this year's bucket
 
         water_mm, results = simulate_year(monthly.loc[year], kc, capacity_mm, water_mm)
 
@@ -97,5 +102,5 @@ if __name__ == "__main__":
     monthly = monthly_by_year(get_daily(42.03, -93.62))
     corn_soy = [{"main_crop": "corn", "cover_crop": None},
                 {"main_crop": "soybean", "cover_crop": None}]
-    for r in simulate_rotation(monthly, corn_soy, 170):
+    for r in simulate_rotation(monthly, corn_soy, 170):   # 170 mm per metre
         print(r)

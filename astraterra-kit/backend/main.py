@@ -6,9 +6,9 @@ Run (from astraterra-kit/backend, with the venv active):
 Then open http://localhost:8000/docs to try the endpoint in the browser.
 
 The response follows docs/api-contract.sample.json (v0.3).
-REAL parts (computed from NASA data): field, climate.monthly, climate.yearly,
-    bare_field_calendar, and each rotation's replay + water_stress + water score.
-PLACEHOLDER parts (copied from the sample contract until built): soil, trends,
+REAL parts (computed from NASA data + SoilGrids): field, soil, climate.monthly, climate.yearly,
+    climate.frost, bare_field_calendar, and each rotation's replay + water_stress + water score.
+PLACEHOLDER parts (copied from the sample contract until built): trends,
     year_types, risk_zones, the other scores, explanation text.
 Each placeholder is listed in the response under "_placeholders"
 """
@@ -24,16 +24,13 @@ from pydantic import BaseModel
 from crops import MAIN_CROP_KC, year_kc
 from features import monthly_by_year, monthly_normals, frost_dates
 from nasa_power import get_daily
+from soil import get_soil, apply_overrides, water_per_metre
 from water_balance import simulate_rotation
 
 app = FastAPI(title="ASTRATERRA API")
 
 # Iowa demo farm, used when the frontend does not send a location yet.
 DEFAULT_LAT, DEFAULT_LON = 42.03, -93.62
-
-# Soil water the roots can use (mm). Placeholder until SoilGrids is connected:
-# ~170 mm per metre of soil (clay loam) x 1 m of roots.
-SOIL_CAPACITY_MM = 170
 
 # The sample contract: used for the parts that are not built yet.
 CONTRACT = json.loads(
@@ -95,7 +92,7 @@ def analyze(req: AnalyzeRequest):
 
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
-        "soil", "climate.trends", "climate.year_types", "climate.yearly[].year_type",
+        "climate.trends", "climate.year_types", "climate.yearly[].year_type",
         "risk_zones", "rotations[].scores (except water and bare_months)",
         "rotations[].why/evidence/benefits/data_gaps/risks_for_local_review",
     ]
@@ -106,6 +103,11 @@ def analyze(req: AnalyzeRequest):
         "data_years": [int(years[0]), int(years[-1])],
     }
     response["climate"]["frost"] = frost_dates(daily)
+
+    # --- Soil: SoilGrids, then the farmer's own numbers on top ---
+    soil_values, soil_source = apply_overrides(get_soil(lat, lon), req.soil_overrides)
+    per_metre = water_per_metre(soil_values["clay_pct"], soil_values["sand_pct"], soil_values["organic_carbon_pct"])
+    response["soil"] = {**soil_values, "water_per_metre_mm": per_metre, "source": soil_source}
 
 
     # climate.monthly: the typical year
@@ -162,7 +164,7 @@ def analyze(req: AnalyzeRequest):
     samples_by_id = {r["id"]: r for r in SAMPLE["rotations"]}
     rotations_out = []
     for rot in build_rotations(current):
-        replay = simulate_rotation(monthly, rot["steps"], SOIL_CAPACITY_MM)
+        replay = simulate_rotation(monthly, rot["steps"], per_metre)
         bad_years = [r for r in replay if r["outcome"] != "ok"]
         avg_stress = sum(r["water_stress_pct"] for r in replay) / len(replay)
 
