@@ -1,0 +1,12 @@
+{
+  "clues": [
+    {
+      "shared_trait": "ph_preference",
+      "crops_involved": ["blueberry", "potato"],
+      "message": "Both failed crops prefer acidic soil (pH below 6.0), and your soil pH is 7.6.",
+      "suggestion": "Your soil may be too alkaline for these crops. Test it with a pH strip before planting them again.",
+      "confidence": "medium"
+    }
+  ],
+  "note": "These are possible causes to check, not diagnoses."
+}
