@@ -1,4 +1,5 @@
 from crops import year_kc
+from crops import MAIN_CROP_KC
 
 STRESS_LINE = 0.5   # FAO-56: crop is stressed below 50% of available soil water
 
@@ -39,3 +40,56 @@ def simulate_year(months, kc, capacity_mm, water_mm):
 
     return water_mm, results
 
+OK_BELOW = 15      # season stress below 15%  -> "ok"
+FAIL_FROM = 35     # season stress 35% or more -> "fail" (in between = "stress")
+
+
+def simulate_rotation(monthly, sequence, capacity_mm):
+    """
+    Run a rotation through every past year, carrying soil water from year to year.
+      monthly:  output of features.monthly_by_year (one row per year+month)
+      sequence: one dict per rotation year, e.g.
+                [{"main_crop": "corn", "cover_crop": "cereal_rye"},
+                 {"main_crop": "soybean", "cover_crop": None}]
+    Returns the replay: one dict per year.
+    """
+    years = sorted(monthly.index.get_level_values("year").unique())
+    water_mm = capacity_mm          # assume the soil starts full
+    replay = []
+
+    for n, year in enumerate(years):
+        step = sequence[n% len(sequence)]            # which rotation year is this? (corn, soybean, corn, ...)
+        kc, bare_months = year_kc(step["main_crop"], step["cover_crop"])
+
+        water_mm, results = simulate_year(monthly.loc[year], kc, capacity_mm, water_mm)
+
+        # Season stress: only count months when the MAIN crop is growing
+        growing = [r for r in results if MAIN_CROP_KC[step["main_crop"]][r["month"] - 1] > 0]
+        demand = sum(r["demand_mm"] for r in growing)
+        actual = sum(r["actual_mm"] for r in growing)
+        stress_pct = round(100 * (demand - actual) / demand) if demand > 0 else 0
+
+        if stress_pct < OK_BELOW:
+            outcome = "ok"
+        elif stress_pct < FAIL_FROM:
+            outcome = "stress"
+        else:
+            outcome = "fail"
+
+        replay.append({
+            "year": int(year),
+            "crop": step["main_crop"],
+            "outcome": outcome,
+            "water_stress_pct": stress_pct,
+        })
+
+    return replay
+if __name__ == "__main__":
+    from nasa_power import get_daily
+    from features import monthly_by_year
+
+    monthly = monthly_by_year(get_daily(42.03, -93.62))
+    corn_soy = [{"main_crop": "corn", "cover_crop": None},
+                {"main_crop": "soybean", "cover_crop": None}]
+    for r in simulate_rotation(monthly, corn_soy, 170):
+        print(r)
