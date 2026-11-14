@@ -3,6 +3,14 @@ import numpy as np
 pd.set_option("display.width", 200)
 from nasa_power import get_daily
 
+"""
+Each month:
+  soil water = last month's soil water + rain − (ET₀ × Kc of the crop growing now)
+  if soil water > what the soil can hold → the extra drains away (bucket overflows)
+  if soil water < 50% of what the soil can hold → the crop is STRESSED that month
+
+"""
+
 HEAT_DAY_C = 32  #max temp anything above -> heat stress day
 HEAVY_RAIN_MM = 25 #daily rain anything above -> heavy rain day
 
