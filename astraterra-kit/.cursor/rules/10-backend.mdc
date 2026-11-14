@@ -1,0 +1,14 @@
+---
+description: Backend rules (Python, FastAPI, analysis pipeline)
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+- Structure: `backend/pipeline/` (fetch, features, trends, clustering), `backend/rotations/` (crop db, water balance, scoring, explain), `backend/api/` (FastAPI routes).
+- Features are monthly: rainfall minus reference ET, heat-stress days (Tmax above 32-35 C), heavy-rain days, last spring / first fall frost, growing degree days, soil-moisture anomaly.
+- Trends: report change per decade with a Mann-Kendall or linear test, and include the p-value.
+- Clustering: k-means on yearly features, k=3, standardize first. State the small-sample caveat (about 20 years) in the output.
+- Water balance: FAO-56 monthly, ETc = Kc * ET0. Output "stress in X of Y years", never one number.
+- Scoring: pure functions, type-hinted, unit-tested with at least one test per criterion. Farmer priority weights are inputs; constraints (no irrigation, no hay equipment) filter options before scoring.
+- Explanations: generated from templates that pull numbers from computed results. Every sentence maps to an `evidence` item.
+- Return `data_gaps` and `risks_for_local_review` for every rotation, even if short.

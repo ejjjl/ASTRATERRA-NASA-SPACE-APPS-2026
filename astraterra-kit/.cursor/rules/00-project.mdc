@@ -1,0 +1,14 @@
+---
+description: ASTRATERRA project-wide rules
+alwaysApply: true
+---
+
+- Read `AGENTS.md` and `docs/api-contract.sample.json` before changing anything that touches the API.
+- The JSON contract is the source of truth. If code and contract disagree, fix the code or open a PR changing the contract. Never silently diverge.
+- Keep changes small and runnable. After each change, say how to run or verify it.
+- Do not add dependencies without stating why. Prefer the standard library, pandas, FastAPI, and what is already installed.
+- Never let an LLM compute or alter a rotation score. Scores come from deterministic functions.
+- Every user-facing claim needs a matching entry in the response `evidence` array.
+- Add a one-line entry to `docs/TOOLS_LOG.md` when you introduce a new dataset, library, or AI tool.
+- Network calls to NASA POWER / OpenTopoData / SoilGrids must go through the cache layer (`data/cache/`) so the demo works offline.
+- Check docs/BUILD_PLAN.md 'What exists today' before referencing any backend or data path.

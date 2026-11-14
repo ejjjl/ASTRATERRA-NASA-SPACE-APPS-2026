@@ -1,0 +1,13 @@
+---
+description: Frontend rules (map, rotation comparison, Why panels)
+globs: frontend/**/*.ts,frontend/**/*.tsx,frontend/**/*.js,frontend/**/*.jsx,frontend/**/*.html,frontend/**/*.css
+alwaysApply: false
+---
+
+- Build against `docs/api-contract.sample.json` and a mock server first. Never block on the backend.
+- Priority screens: (1) field map with risk zones, (2) rotation comparison, (3) expandable "Why this recommendation?" panel, (4) bare-field calendar, (5) Farm Journal.
+- No login. State lives in the browser (localStorage) unless the team decides otherwise.
+- Farmers are not technical: plain language, no dataset names in the primary view. Dataset names and assumptions live inside the "Why this recommendation?" panel.
+- Always show: evidence, assumptions, uncertainty, and the reminder that local experts should validate.
+- Mobile-friendly layouts; large tap targets; color is never the only signal (add icons or labels).
+- Map: Leaflet with OpenStreetMap tiles. Field zones come from the API as GeoJSON.

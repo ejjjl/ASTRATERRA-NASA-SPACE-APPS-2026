@@ -1,0 +1,152 @@
+{
+  "_meta": {
+    "version": "0.2",
+    "note": "Proposed contract. Values are illustrative sample data, not real results. All scores are 0-1, higher is better. Change via PR and announce in Discord."
+  },
+  "request_example": {
+    "endpoint": "POST /api/analyze",
+    "body": {
+      "lat": 42.03,
+      "lon": -93.62,
+      "field_name": "North 40",
+      "current_rotation": ["corn", "soybean"],
+      "priorities": { "water": 0.3, "soil_health": 0.4, "profit": 0.2, "forage": 0.1 },
+      "constraints": { "irrigation": false, "hay_equipment": false },
+      "soil_overrides": { "clay_pct": null, "sand_pct": null, "organic_carbon_pct": null, "ph": 6.2 }
+    }
+  },
+  "response": {
+    "field": { "name": "North 40", "lat": 42.03, "lon": -93.62, "elevation_m": 296, "data_years": [2006, 2025] },
+    "soil": {
+      "clay_pct": 27, "sand_pct": 22, "organic_carbon_pct": 2.1, "ph": 6.2,
+      "source": { "clay_pct": "SoilGrids", "ph": "farmer_override" }
+    },
+    "climate": {
+      "trends": [
+        {
+          "variable": "july_tmax_c",
+          "change_per_decade": 0.4,
+          "unit": "C/decade",
+          "p_value": 0.03,
+          "plain_language": "July highs are rising about 0.4 C per decade."
+        }
+      ],
+      "frost": { "last_spring_median_doy": 118, "first_fall_median_doy": 285 },
+      "year_types": [
+        { "label": "Hot/dry", "count": 4, "years": [2012, 2020], "caveat": "Small sample (20 years)." }
+      ]
+    },
+    "risk_zones": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "kind": "erosion", "level": "high", "slope_pct": 9.4 },
+          "geometry": { "type": "Polygon", "coordinates": [[[-93.6225, 42.0315], [-93.6195, 42.0315], [-93.6195, 42.0295], [-93.6225, 42.0295], [-93.6225, 42.0315]]] }
+        },
+        {
+          "type": "Feature",
+          "properties": { "kind": "frost_pocket", "level": "medium", "slope_pct": 1.2 },
+          "geometry": { "type": "Polygon", "coordinates": [[[-93.6205, 42.0285], [-93.6180, 42.0285], [-93.6180, 42.0270], [-93.6205, 42.0270], [-93.6205, 42.0285]]] }
+        },
+        {
+          "type": "Feature",
+          "properties": { "kind": "erosion", "level": "low", "slope_pct": 2.1 },
+          "geometry": { "type": "Polygon", "coordinates": [[[-93.6190, 42.0312], [-93.6165, 42.0312], [-93.6165, 42.0292], [-93.6190, 42.0292], [-93.6190, 42.0312]]] }
+        }
+      ]
+    },
+    "bare_field_calendar": {
+      "source": "MODIS NDVI 250 m, 16-day",
+      "months": [
+        { "month": 1, "bare": true, "ndvi_median": 0.12, "heavy_rain_risk": "low" },
+        { "month": 2, "bare": true, "ndvi_median": 0.12, "heavy_rain_risk": "low" },
+        { "month": 3, "bare": true, "ndvi_median": 0.14, "heavy_rain_risk": "medium" },
+        { "month": 4, "bare": true, "ndvi_median": 0.16, "heavy_rain_risk": "high" },
+        { "month": 5, "bare": true, "ndvi_median": 0.2, "heavy_rain_risk": "high" },
+        { "month": 6, "bare": false, "ndvi_median": 0.55, "heavy_rain_risk": "high" },
+        { "month": 7, "bare": false, "ndvi_median": 0.82, "heavy_rain_risk": "medium" },
+        { "month": 8, "bare": false, "ndvi_median": 0.8, "heavy_rain_risk": "medium" },
+        { "month": 9, "bare": false, "ndvi_median": 0.6, "heavy_rain_risk": "medium" },
+        { "month": 10, "bare": true, "ndvi_median": 0.25, "heavy_rain_risk": "low" },
+        { "month": 11, "bare": true, "ndvi_median": 0.15, "heavy_rain_risk": "low" },
+        { "month": 12, "bare": true, "ndvi_median": 0.12, "heavy_rain_risk": "low" }
+      ]
+    },
+    "rotations": [
+      {
+        "id": "current",
+        "name": "Corn / Soybean (current)",
+        "sequence": ["corn", "soybean"],
+        "is_current": true,
+        "requires": [],
+        "scores": { "water": 0.55, "bare_months": 0.4, "erosion": 0.45, "nitrogen": 0.6, "organic_matter": 0.4, "pest_break": 0.5, "profit": 0.8, "forage": 0.1 },
+        "water_stress": { "years_with_stress": 3, "years_total": 20, "worst_month": 7 },
+        "why": "Matches your current practice. Included as the baseline for comparison.",
+        "evidence": [
+          { "id": "e1", "claim": "Field has no crop cover", "value": 7, "unit": "months/year", "source": "MODIS NDVI" },
+          { "id": "e2", "claim": "Bare months that overlap heavy-rain months", "value": 2, "unit": "months", "source": "NASA POWER + MODIS NDVI" }
+        ],
+        "benefits": ["High expected profit", "Familiar equipment and markets"],
+        "data_gaps": ["Local yield history not provided"],
+        "risks_for_local_review": ["Erosion on steeper zones in spring"],
+        "confidence": "medium"
+      },
+      {
+        "id": "alt_cover",
+        "name": "Corn / Soybean + cereal rye cover",
+        "sequence": ["corn", "soybean", "cereal_rye_cover"],
+        "is_current": false,
+        "requires": [],
+        "scores": { "water": 0.55, "bare_months": 0.8, "erosion": 0.8, "nitrogen": 0.65, "organic_matter": 0.65, "pest_break": 0.55, "profit": 0.72, "forage": 0.2 },
+        "water_stress": { "years_with_stress": 3, "years_total": 20, "worst_month": 7 },
+        "why": "A winter cover crop fills the bare months that overlap with heavy-rain months.",
+        "evidence": [
+          { "id": "e3", "claim": "Bare months removed", "value": 4, "unit": "months/year", "source": "MODIS NDVI" }
+        ],
+        "benefits": ["Cuts spring erosion on the high-risk zone", "Adds organic matter over time"],
+        "data_gaps": ["Seed and termination cost not estimated"],
+        "risks_for_local_review": ["Termination timing before corn planting", "Soil water use in dry springs"],
+        "confidence": "medium"
+      },
+      {
+        "id": "alt_small_grain",
+        "name": "Corn / Soybean / Winter wheat + red clover",
+        "sequence": ["corn", "soybean", "wheat_winter", "red_clover"],
+        "is_current": false,
+        "requires": [],
+        "scores": { "water": 0.65, "bare_months": 0.7, "erosion": 0.75, "nitrogen": 0.8, "organic_matter": 0.7, "pest_break": 0.85, "profit": 0.65, "forage": 0.3 },
+        "water_stress": { "years_with_stress": 2, "years_total": 20, "worst_month": 7 },
+        "why": "A small grain and a legume break pest cycles and add nitrogen while lowering peak summer water demand.",
+        "evidence": [
+          { "id": "e4", "claim": "Years with July water stress under this rotation", "value": 2, "unit": "of 20 years", "source": "FAO-56 water balance on NASA POWER" }
+        ],
+        "benefits": ["Breaks corn and soybean pest cycles", "Clover fixes nitrogen for the next corn crop"],
+        "data_gaps": ["Local wheat market price not provided"],
+        "risks_for_local_review": ["Wheat disease pressure in humid springs"],
+        "confidence": "medium"
+      },
+      {
+        "id": "alt_perennial",
+        "name": "Corn / Soybean / 2 years alfalfa",
+        "sequence": ["corn", "soybean", "alfalfa", "alfalfa"],
+        "is_current": false,
+        "requires": ["hay_equipment"],
+        "scores": { "water": 0.6, "bare_months": 0.9, "erosion": 0.9, "nitrogen": 0.85, "organic_matter": 0.85, "pest_break": 0.8, "profit": 0.55, "forage": 0.9 },
+        "water_stress": { "years_with_stress": 2, "years_total": 20, "worst_month": 8 },
+        "why": "A perennial forage phase gives year-round cover and deep roots, and adds forage income.",
+        "evidence": [
+          { "id": "e5", "claim": "Bare months under this rotation", "value": 1, "unit": "months/year", "source": "MODIS NDVI + crop calendar" }
+        ],
+        "benefits": ["Strongest erosion and organic matter gains", "Forage value for livestock or sale"],
+        "data_gaps": ["No local hay market data"],
+        "risks_for_local_review": ["Needs hay equipment or a custom operator", "Alfalfa needs pH near neutral; your pH is 6.2"],
+        "confidence": "low"
+      }
+    ],
+    "disclaimers": [
+      "Soil wetness comes from the MERRA-2 model via NASA POWER, not a direct satellite reading.",
+      "This tool supports, and does not replace, local agronomic expertise."
+    ]
+  }
+}

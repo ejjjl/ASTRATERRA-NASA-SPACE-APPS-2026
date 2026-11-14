@@ -1,0 +1,13 @@
+---
+description: How to add or edit frontend feature modules
+globs: frontend/src/features/**
+alwaysApply: false
+---
+
+- One feature per folder in `frontend/src/features/<name>/index.jsx`, default-exporting `{ id, title, order, Component }`. Start from `features/_template/index.template.jsx`.
+- Read shared state only through `useApp()` from `core/AppState.jsx`. Never import another feature.
+- Do not edit `App.jsx` or `registry.js` to add a feature. The registry auto-discovers.
+- Any new data field must be added to `docs/api-contract.sample.json` in the same change.
+- Handle missing data without throwing. Show a short plain-language empty state.
+- Keep farmer-facing text simple. Put dataset names and assumptions inside the expandable "Why" or source lines.
+- Update the table in `docs/FEATURES.md` when adding a feature.

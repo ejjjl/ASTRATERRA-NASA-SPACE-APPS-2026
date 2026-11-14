@@ -1,0 +1,11 @@
+---
+description: Crop database and agronomy research rules
+globs: data/crops/**
+alwaysApply: false
+---
+
+- Crop data lives in `data/crops/crops.csv`. Columns are defined in `data/crops/crops.template.csv`.
+- Every row needs a `source_url` (university extension, FAO, or USDA). No source, no row.
+- Kc values follow FAO-56 (initial, mid, late) with lengths of growth stages in days.
+- Mark unknown values as empty, never guess. The tool displays unknowns as data gaps.
+- Rotation templates: add a cover crop, add a legume, add a small grain, swap in a drought-tolerant crop, add a perennial forage phase.
