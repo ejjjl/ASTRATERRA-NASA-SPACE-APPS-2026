@@ -10,8 +10,7 @@ REAL parts (computed from NASA data): field, climate.monthly, climate.yearly,
     bare_field_calendar, and each rotation's replay + water_stress + water score.
 PLACEHOLDER parts (copied from the sample contract until built): soil, trends,
     year_types, risk_zones, the other scores, explanation text.
-Each placeholder is listed in the response under "_placeholders" so nobody
-mistakes it for a real result.
+Each placeholder is listed in the response under "_placeholders"
 """
 
 import copy
@@ -23,7 +22,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from crops import MAIN_CROP_KC, year_kc
-from features import monthly_by_year, monthly_normals
+from features import monthly_by_year, monthly_normals, frost_dates
 from nasa_power import get_daily
 from water_balance import simulate_rotation
 
@@ -89,13 +88,14 @@ def analyze(req: AnalyzeRequest):
     current = [c for c in req.current_rotation if c in MAIN_CROP_KC] or ["corn", "soybean"]
 
     # --- Real NASA data ---
-    monthly = monthly_by_year(get_daily(lat, lon))
+    daily = get_daily(lat, lon)
+    monthly = monthly_by_year(daily)
     normals = monthly_normals(monthly).reset_index()
-    years = sorted(monthly.index.get_level_values("year").unique())
+    years =sorted(monthly.index.get_level_values("year").unique())
 
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
-        "soil", "climate.trends", "climate.year_types", "climate.yearly[].year_type", "climate.frost",
+        "soil", "climate.trends", "climate.year_types", "climate.yearly[].year_type",
         "risk_zones", "rotations[].scores (except water and bare_months)",
         "rotations[].why/evidence/benefits/data_gaps/risks_for_local_review",
     ]
@@ -105,6 +105,8 @@ def analyze(req: AnalyzeRequest):
         "elevation_m": None,  # comes with the elevation (risk map) step
         "data_years": [int(years[0]), int(years[-1])],
     }
+    response["climate"]["frost"] = frost_dates(daily)
+
 
     # climate.monthly: the typical year
     response["climate"]["monthly"] = [

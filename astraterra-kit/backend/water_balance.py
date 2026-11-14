@@ -2,7 +2,13 @@ from crops import year_kc
 from crops import MAIN_CROP_KC
 
 STRESS_LINE = 0.5   # FAO-56: crop is stressed below 50% of available soil water
+"""
+Each month:
+  soil water = last month's soil water + rain − (ET₀ × Kc of the crop growing now)
+  if soil water > what the soil can hold → the extra drains away (bucket overflows)
+  if soil water < 50% of what the soil can hold → the crop is STRESSED that month
 
+"""
 
 def simulate_year(months, kc, capacity_mm, water_mm):
     """
