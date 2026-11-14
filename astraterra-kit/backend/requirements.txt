@@ -1,0 +1,7 @@
+fastapi          # turns Python functions into web endpoints
+uvicorn          # the server that runs the FastAPI app
+requests         # calls external APIs (NASA POWER, SoilGrids, OpenTopoData)
+pandas           # tables of data: daily -> monthly, grouping by year
+numpy            # fast math on arrays
+scikit-learn     # k-means clustering for year types
+pymannkendall    # trend test (Mann-Kendall + Sen's slope)
