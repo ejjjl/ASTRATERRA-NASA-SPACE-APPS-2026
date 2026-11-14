@@ -4,3 +4,9 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+
+# Cache: every map pin downloads new files. Only the Iowa demo farm is committed.
+data/cache/*
+!data/cache/power_42.03_-93.62_2005_2025.json
+!data/cache/soil_42.03_-93.62.json
+!data/cache/terrain_42.0300_-93.6200.json

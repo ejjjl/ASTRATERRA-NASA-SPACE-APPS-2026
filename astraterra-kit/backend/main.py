@@ -6,10 +6,10 @@ Run (from astraterra-kit/backend, with the venv active):
 Then open http://localhost:8000/docs to try the endpoint in the browser.
 
 The response follows docs/api-contract.sample.json (v0.3).
-REAL parts (computed from NASA data + SoilGrids): field, soil, climate.monthly, climate.yearly,
+REAL parts (computed from NASA POWER + NASA SRTM + SoilGrids): field, soil, risk_zones, climate.monthly, climate.yearly,
     climate.frost, bare_field_calendar, and each rotation's replay + water_stress + water score.
 PLACEHOLDER parts (copied from the sample contract until built): trends,
-    year_types, risk_zones, the other scores, explanation text.
+    year_types, the other scores, explanation text.
 Each placeholder is listed in the response under "_placeholders"
 """
 
@@ -25,6 +25,7 @@ from crops import MAIN_CROP_KC, year_kc
 from features import monthly_by_year, monthly_normals, frost_dates
 from nasa_power import get_daily
 from soil import get_soil, apply_overrides, water_per_metre
+from terrain import risk_zones
 from water_balance import simulate_rotation
 
 app = FastAPI(title="ASTRATERRA API")
@@ -93,14 +94,19 @@ def analyze(req: AnalyzeRequest):
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
         "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "risk_zones", "rotations[].scores (except water and bare_months)",
+        "rotations[].scores (except water and bare_months)",
         "rotations[].why/evidence/benefits/data_gaps/risks_for_local_review",
     ]
 
+    # --- Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) ---
+    zones, elevation_m, terrain = risk_zones(lat, lon)
+    response["risk_zones"] = zones
+
     response["field"] = {
         "name": field_name, "lat": lat, "lon": lon,
-        "elevation_m": None,  # comes with the elevation (risk map) step
+        "elevation_m": elevation_m,
         "data_years": [int(years[0]), int(years[-1])],
+        "terrain": terrain,   # field slope, steepest slope, height range (m)
     }
     response["climate"]["frost"] = frost_dates(daily)
 
