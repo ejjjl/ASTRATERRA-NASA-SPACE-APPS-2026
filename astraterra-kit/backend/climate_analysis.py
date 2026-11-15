@@ -1,18 +1,6 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-import pymannkendall as mk
-import matplotlib.pyplot as plt
-import numpy as np
-
-def trends(df):
-    feature_columns = {
-        "summer_tmax_c",
-        "summer_rain_mm",
-        "summer_soil_moisture_root",
-        "is_heat_days"
-    }
-
 
 def year_types(yearly):
     """Cluster yearly summer conditions into three readable weather types.
