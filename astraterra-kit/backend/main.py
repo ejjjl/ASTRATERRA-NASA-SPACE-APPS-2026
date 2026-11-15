@@ -35,7 +35,7 @@ from water_balance import simulate_rotation, worst_month
 from scoring import score_rotation
 from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
 from journal import journal_clues
-from trends import climate_trends
+from trends import climate_trends, trends_summary
 
 # Brandon's k-means year types (backend/climate_analysis.py). Until that file is pushed,
 # the API keeps working and simply leaves year types empty.
@@ -203,6 +203,8 @@ def analyze(req: AnalyzeRequest):
     response["climate"]["frost"] = frost_dates(daily)
     # Mann-Kendall + Sen's slope on yearly values (trends.py): significant trends first
     response["climate"]["trends"] = climate_trends(daily, monthly)
+    # One sentence for all the "no clear trend" results
+    response["climate"]["trends_summary"] = trends_summary(daily, monthly, response["climate"]["trends"])
 
     # Soil: SoilGrids, then the farmer's own numbers on top ---
     soil_values, soil_source = apply_overrides(fetched["soilgrids"] or get_soil(lat, lon), req.soil_overrides)

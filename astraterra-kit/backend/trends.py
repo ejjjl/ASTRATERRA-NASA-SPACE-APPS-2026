@@ -100,6 +100,25 @@ def climate_trends(daily, monthly):
     return trends
 
 
+def trends_summary(daily, monthly, trends):
+    """
+    One sentence for all the NON-significant trends, so the app does not list nine
+    "no clear trend" lines. Names this field's two driest summers as the example of
+    year-to-year swings.
+    """
+    flat = [DESCRIBE[t["variable"]][3] for t in trends if not t["significant"]]
+    if not flat:
+        return ""
+    table = yearly_table(daily, monthly)
+    driest = sorted(int(y) for y in table["summer_soil_moisture"].nsmallest(2).index)
+    first, last = int(table.index.min()), int(table.index.max())
+    names = flat[0] if len(flat) == 1 else ", ".join(flat[:-1]) + " or " + flat[-1]
+    lead = "No clear long-term trend" if len(flat) == len(trends) else "The other measures show no clear trend"
+    return (f"{lead} over {first}-{last} in {names}. On this field, swings between single years "
+            f"(such as the dry summers of {driest[0]} and {driest[1]}) are larger than any 21-year change, "
+            f"which is why ASTRATERRA replays every past year instead of relying on averages.")
+
+
 if __name__ == "__main__":
     import sys
     from features import monthly_by_year

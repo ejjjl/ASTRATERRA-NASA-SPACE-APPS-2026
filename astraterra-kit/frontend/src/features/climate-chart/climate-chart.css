@@ -10,3 +10,8 @@
 .cc-trends li { margin-bottom: 4px; }
 .cc-sig { display: block; font-size: .75rem; color: #6b776e; }
 .cc-sig.yes { color: #2f6b45; }
+
+/* Trends: one summary sentence + optional full list */
+.cc-trend-summary { margin: 6px 0 8px; line-height: 1.5; }
+.cc-all-trends summary { cursor: pointer; color: #2f6b45; font-weight: 600; font-size: .85rem; padding: 6px 0; min-height: 32px; }
+.cc-all-trends ul { margin-top: 4px; }

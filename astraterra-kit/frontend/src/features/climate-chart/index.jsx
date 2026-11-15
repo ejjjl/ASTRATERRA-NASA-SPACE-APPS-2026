@@ -29,6 +29,8 @@ function ClimateChart() {
   // Long-term trends (Mann-Kendall + Sen's slope). Hidden while the backend still flags them as placeholders.
   const trends = (data.climate?.trends || []).filter((t) => t.plain_language);
   const trendsAreReal = !(data._placeholders || []).includes("climate.trends");
+  const isSig = (t) => t.significant ?? (t.p_value != null && t.p_value < 0.05);
+  const significant = trends.filter(isSig);
 
   return (
     <>
@@ -77,20 +79,35 @@ function ClimateChart() {
       {trendsAreReal && trends.length > 0 && (
         <div className="cc-trends">
           <h4>How conditions have changed</h4>
-          <ul>
-            {trends.map((t) => {
-              const sig = t.significant ?? (t.p_value != null && t.p_value < 0.05);
-              return (
+          {/* Real (significant) trends first; all the "no clear trend" results become one sentence. */}
+          {significant.length > 0 && (
+            <ul>
+              {significant.map((t) => (
                 <li key={t.variable}>
                   {t.plain_language}
-                  <span className={`cc-sig ${sig ? "yes" : "no"}`}>
-                    {sig ? "Statistically significant" : "Not statistically significant"}
-                    {t.p_value != null ? ` (p = ${t.p_value})` : ""}
-                  </span>
+                  <span className="cc-sig yes">Statistically significant (p = {t.p_value})</span>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+            </ul>
+          )}
+          {data.climate?.trends_summary && <p className="cc-trend-summary">{data.climate.trends_summary}</p>}
+          <details className="cc-all-trends">
+            <summary>Show all {trends.length} trend tests</summary>
+            <ul>
+              {trends.map((t) => {
+                const sig = isSig(t);
+                return (
+                  <li key={t.variable}>
+                    {t.plain_language}
+                    <span className={`cc-sig ${sig ? "yes" : "no"}`}>
+                      {sig ? "Statistically significant" : "Not statistically significant"}
+                      {t.p_value != null ? ` (p = ${t.p_value})` : ""}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
           <p className="hint">
             Trend test: Mann-Kendall with Sen's slope on {data.field.data_years?.[0]}-{data.field.data_years?.[1]} NASA POWER data.
             Twenty-one years is a short record, so treat small changes as hints, not proof.
