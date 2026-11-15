@@ -23,3 +23,12 @@
   .rs-print-title { display: block; margin-bottom: 12px; }
   .rs-winner { break-inside: avoid; background: #fff; }
 }
+
+/* "Recommended for you" box (backend recommendation) */
+.rs-rec { border-left: 6px solid #2f6b45; background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+.rs-rec h2 { margin: 0 0 6px; font-size: 1.25rem; }
+.rs-rec h3 { margin: 12px 0 4px; font-size: .95rem; color: #8a4b00; }
+.rs-rec-head { font-weight: 600; margin: 0 0 8px; }
+.rs-rec-reasons, .rs-rec-trade { margin: 0; padding-left: 20px; }
+.rs-rec-trade { color: #8a4b00; }
+@media print { .rs-rec { break-inside: avoid; box-shadow: none; border: 1px solid #2f6b45; } }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../../core/AppState.jsx";
-import { CRITERIA_GROUPS, PRIORITY_LABELS, rankRotations } from "../../core/scoring.js";
+import { CRITERIA_GROUPS, PRIORITY_LABELS, fitParts, rankRotations } from "../../core/scoring.js";
 import { CROP_LABEL, OUTCOME_LABEL, ReplayLegend, YearDetail } from "./replay-detail.jsx";
 import "./rotation-compare.css";
 
@@ -21,6 +21,27 @@ function ScoreBars({ scores }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function FitBreakdown({ scores, fit, priorities }) {
+  const parts = fitParts(scores, priorities);
+  if (!parts.length) return null;
+  return (
+    <div className="rc-fit">
+      <table>
+        <caption>How this fit score is built</caption>
+        <thead><tr><th>Priority</th><th>Score</th><th>Your weight</th><th>Points</th></tr></thead>
+        <tbody>
+          {parts.map((p) => (
+            <tr key={p.group}>
+              <td>{p.label}</td><td>{pct(p.score)}</td><td>{p.weight_pct}%</td><td>{p.points.toFixed(1)}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot><tr><td colSpan="3">Fit score</td><td>{pct(fit)}</td></tr></tfoot>
+      </table>
     </div>
   );
 }
@@ -64,7 +85,7 @@ function MiniCalendar({ bareMonths }) {
   );
 }
 
-function RotationCard({ r, rank }) {
+function RotationCard({ r, rank, priorities }) {
   const [open, setOpen] = useState(false);
   const blocked = r.blockedBy.length > 0;
   return (
@@ -79,6 +100,7 @@ function RotationCard({ r, rank }) {
         <span className="big">{pct(r.fit)}</span>
         <span className="sub">fit for your priorities</span>
       </div>
+      <FitBreakdown scores={r.scores} fit={r.fit} priorities={priorities} />
 
       {blocked && (
         <p className="warn">Needs {r.blockedBy.map((b) => b.replace("_", " ")).join(", ")}. Shown for reference only.</p>
@@ -98,6 +120,7 @@ function RotationCard({ r, rank }) {
 
       {open && (
         <div className="why">
+          {r.summary && <p className="rc-summary">{r.summary}</p>}
           <Section title="Benefits" items={r.benefits} />
           <Section title="Evidence"
             items={(r.evidence || []).map((e) => `${e.claim}: ${e.value} ${e.unit} (${e.source})`)} />
@@ -128,7 +151,7 @@ function RotationCompare() {
   return (
     <>
       <div className="grid">
-        {ranked.map((r, i) => <RotationCard key={r.id} r={r} rank={i + 1} />)}
+        {ranked.map((r, i) => <RotationCard key={r.id} r={r} rank={i + 1} priorities={priorities} />)}
       </div>
     </>
   );

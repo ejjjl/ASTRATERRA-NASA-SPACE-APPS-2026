@@ -37,6 +37,10 @@ function Report() {
   }
 
   const winnerIsCurrent = winner.id === current?.id;
+  // The backend recommendation was made for the priorities sent with the request. After the farmer moves a
+  // slider the browser re-ranks, so only show the backend box while it still points at the same winner.
+  const rec = data.recommendation;
+  const showRec = !!rec && rec.rotation_id === winner.id && rec.reasons?.length > 0;
   const rows = Object.keys(PRIORITY_LABELS)
     .filter((g) => (priorities[g] ?? 0) > 0)
     .map((g) => {
@@ -66,6 +70,24 @@ function Report() {
         </p>
       </div>
 
+      {showRec && (
+        <section className="rs-rec" aria-labelledby="rs-rec-title">
+          <h2 id="rs-rec-title">Recommended for you</h2>
+          <p className="rs-rec-head">{rec.headline}</p>
+          <ul className="rs-rec-reasons">
+            {rec.reasons.map((t, i) => <li key={i}>{t}</li>)}
+          </ul>
+          {rec.trade_offs?.length > 0 && (
+            <>
+              <h3>Trade-offs to weigh</h3>
+              <ul className="rs-rec-trade">
+                {rec.trade_offs.map((t, i) => <li key={i}>{t}</li>)}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
+
       <div className="rs-winner">
         <span className="rs-kicker">{winnerIsCurrent ? "Your current rotation fits best" : "Best fit for your priorities"}</span>
         <h2 className="rs-name">{winner.name}</h2>
@@ -85,7 +107,7 @@ function Report() {
               below are still worth a look if your priorities change.
             </li>
           )}
-          {strengths.map((r) => (
+          {!showRec && strengths.map((r) => (
             <li key={r.g}>
               It does best on <strong>{lower(PRIORITY_LABELS[r.g])}</strong>: {pct(r.ws)} compared with {pct(r.cs)} for
               your current rotation.
@@ -99,7 +121,7 @@ function Report() {
               {worst && worst.water_stress_pct > 0 ? ` The worst year was ${worst.year}, when water stress reached ${worst.water_stress_pct}%.` : ""}
             </li>
           )}
-          {tradeoffs.map((r) => (
+          {!showRec && tradeoffs.map((r) => (
             <li key={r.g} className="rs-trade">
               Trade-off: it scores lower on <strong>{lower(PRIORITY_LABELS[r.g])}</strong> ({pct(r.ws)} compared with{" "}
               {pct(r.cs)} for your current rotation).

@@ -26,6 +26,9 @@ function ClimateChart() {
 
   const deficit = monthly.filter((m) => m.water_balance_mm < 0).map((m) => m.month);
   const frost = data.climate?.frost;
+  // Long-term trends (Mann-Kendall + Sen's slope). Hidden while the backend still flags them as placeholders.
+  const trends = (data.climate?.trends || []).filter((t) => t.plain_language);
+  const trendsAreReal = !(data._placeholders || []).includes("climate.trends");
 
   return (
     <>
@@ -71,6 +74,29 @@ function ClimateChart() {
           : "Rain covers water demand in every month."}
         {frost?.frost_free_days ? ` Typical frost-free season: about ${frost.frost_free_days} days.` : ""}
       </p>
+      {trendsAreReal && trends.length > 0 && (
+        <div className="cc-trends">
+          <h4>How conditions have changed</h4>
+          <ul>
+            {trends.map((t) => {
+              const sig = t.significant ?? (t.p_value != null && t.p_value < 0.05);
+              return (
+                <li key={t.variable}>
+                  {t.plain_language}
+                  <span className={`cc-sig ${sig ? "yes" : "no"}`}>
+                    {sig ? "Statistically significant" : "Not statistically significant"}
+                    {t.p_value != null ? ` (p = ${t.p_value})` : ""}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="hint">
+            Trend test: Mann-Kendall with Sen's slope on {data.field.data_years?.[0]}-{data.field.data_years?.[1]} NASA POWER data.
+            Twenty-one years is a short record, so treat small changes as hints, not proof.
+          </p>
+        </div>
+      )}
       <p className="hint">Source: NASA POWER daily data, averaged by month over {data.field.data_years?.[0]}-{data.field.data_years?.[1]}.</p>
     </>
   );

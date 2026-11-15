@@ -44,3 +44,21 @@ export function rankRotations(rotations, priorities, constraints) {
       return b.fit - a.fit;
     });
 }
+
+// Breakdown of the fit number, same formula as weightedFit(): the priorities the farmer cares about,
+// each with its score (0-1), share of the weighting (%) and the points it adds to the 0-100 fit.
+// Computed here (not read from the API) so it always matches the number after a slider moves.
+export function fitParts(scores, priorities) {
+  const parts = [];
+  let den = 0;
+  for (const [group, keys] of Object.entries(CRITERIA_GROUPS)) {
+    const w = priorities[group] ?? 0;
+    const vals = keys.map((k) => scores[k]).filter((v) => v != null);
+    if (!w || !vals.length) continue;
+    parts.push({ group, label: PRIORITY_LABELS[group], score: mean(vals), w });
+    den += w;
+  }
+  return parts
+    .map((p) => ({ ...p, weight_pct: Math.round((p.w / den) * 100), points: (p.w / den) * p.score * 100 }))
+    .sort((a, b) => b.weight_pct - a.weight_pct);
+}
