@@ -30,6 +30,7 @@ from terrain import risk_zones
 from cdl import crop_history, detect_rotation, is_cropland
 from water_balance import simulate_rotation
 from scoring import score_rotation
+from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
 
 app = FastAPI(title="ASTRATERRA API")
 
@@ -44,7 +45,7 @@ CONTRACT = json.loads(
 SAMPLE = CONTRACT["response"]
 
 
-# ---------- 1. What the frontend sends ----------
+#1. What the frontend sends 
 # pydantic checks the incoming JSON for us: wrong types give a clear error.
 # Everything is optional so the frontend can send a partial request.
 class AnalyzeRequest(BaseModel):
@@ -118,7 +119,7 @@ def analyze(req: AnalyzeRequest):
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
         "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "rotations[].scores.profit", "rotations[].confidence", "rotations[].water_stress.worst_month",
+        "rotations[].scores.profit", "rotations[].water_stress.worst_month",
     ]
 
     #  Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) 
@@ -139,7 +140,7 @@ def analyze(req: AnalyzeRequest):
     }
     response["climate"]["frost"] = frost_dates(daily)
 
-    # --- Soil: SoilGrids, then the farmer's own numbers on top ---
+    # Soil: SoilGrids, then the farmer's own numbers on top ---
     soil_values, soil_source = apply_overrides(get_soil(lat, lon), req.soil_overrides)
     per_metre = water_per_metre(soil_values["clay_pct"], soil_values["sand_pct"], soil_values["organic_carbon_pct"])
     response["soil"] = {**soil_values, "water_per_metre_mm": per_metre, "source": soil_source}
@@ -225,7 +226,7 @@ def analyze(req: AnalyzeRequest):
             "sequence": [s["main_crop"] + (f" + {s['cover_crop']}" if s["cover_crop"] else "") for s in rot["steps"]],
             "scores": scores,
             "evidence": evidence,
-            **rotation_text(rot),          # Robajr's why / benefits / risks / gaps / sources
+            **rotation_text(rot),          # why / benefits / risks / gaps / sources
             "water_stress": {
                 **sample["water_stress"],          # keeps worst_month (placeholder)
                 "years_with_stress": len(bad_years),
@@ -233,9 +234,23 @@ def analyze(req: AnalyzeRequest):
                 "worst_year": max(replay, key=lambda r: r["water_stress_pct"])["year"],
             },
             "replay": replay,
+            "fit": fit_breakdown(scores, req.priorities),    # "what 71 means"
+            "confidence": confidence(rot["steps"]),
+            "_facts": rotation_facts(rot["steps"], replay, rain_risk),   # used below, removed before sending
         })
 
+    #Explanations: compare every rotation with the current one on THIS field 
+    slope = terrain.get("field_slope_pct")
+    current_facts = next(r["_facts"] for r in rotations_out if r["is_current"])
+    for r in rotations_out:
+        facts = r.pop("_facts")
+        r["summary"] = summary(facts, r["is_current"])
+        if not r["is_current"]:
+            # field-specific numbers first, then Robajr's general benefits
+            r["benefits"] = field_facts(facts, current_facts, slope) + r["benefits"]
+
     response["rotations"] = rotations_out
+    response["recommendation"] = recommendation(rotations_out, req.priorities, req.constraints)
     return response
 
 
