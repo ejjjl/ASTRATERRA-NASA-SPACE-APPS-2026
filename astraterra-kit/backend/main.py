@@ -35,6 +35,7 @@ from water_balance import simulate_rotation, worst_month
 from scoring import score_rotation
 from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
 from journal import journal_clues
+from trends import climate_trends
 
 app = FastAPI(title="ASTRATERRA API")
 log = logging.getLogger("uvicorn.error")      # prints in the same console as uvicorn
@@ -159,7 +160,7 @@ def analyze(req: AnalyzeRequest):
 
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
-        "climate.trends", "climate.year_types", "climate.yearly[].year_type",
+        "climate.year_types", "climate.yearly[].year_type",
         "rotations[].scores.profit",
     ]
 
@@ -180,6 +181,8 @@ def analyze(req: AnalyzeRequest):
         "rotation_source": rotation_source,    # farmer | USDA Cropland Data Layer | default
     }
     response["climate"]["frost"] = frost_dates(daily)
+    # Mann-Kendall + Sen's slope on yearly values (trends.py): significant trends first
+    response["climate"]["trends"] = climate_trends(daily, monthly)
 
     # Soil: SoilGrids, then the farmer's own numbers on top ---
     soil_values, soil_source = apply_overrides(fetched["soilgrids"] or get_soil(lat, lon), req.soil_overrides)
