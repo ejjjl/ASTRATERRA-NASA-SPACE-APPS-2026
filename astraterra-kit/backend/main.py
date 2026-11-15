@@ -21,7 +21,8 @@ from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from crops import MAIN_CROP_KC, year_kc
+from crops import CROP_DATA_GAPS, MAIN_CROP_KC, year_kc
+from rotations import build_rotations
 from features import monthly_by_year, monthly_normals, frost_dates
 from nasa_power import get_daily
 from soil import get_soil, apply_overrides, water_per_metre
@@ -57,41 +58,52 @@ class AnalyzeRequest(BaseModel):
     soil_overrides: dict[str, Optional[float]] = {}
 
 
-# ---------- 2. Rotation templates ----------
-# Each alternative is built from the farmer's current rotation.
-# Robajr's templates will replace these.
-def build_rotations(current):
-    def steps(crops, cover=None):
-        return [{"main_crop": c, "cover_crop": cover} for c in crops]
+#2. Rotations 
+# Built in rotations.py from templates (data/rotations/templates.json).
 
-    return [
-        {"id": "current", "name": " / ".join(c.title() for c in current) + " (current)",
-         "is_current": True, "requires": [], "steps": steps(current)},
-        {"id": "alt_cover", "name": " / ".join(c.title() for c in current) + " + cereal rye cover",
-         "is_current": False, "requires": [], "steps": steps(current, "cereal_rye")},
-        {"id": "alt_small_grain", "name": " / ".join(c.title() for c in current) + " / Winter wheat + red clover",
-         "is_current": False, "requires": [],
-         "steps": steps(current) + [{"main_crop": "wheat_winter", "cover_crop": "red_clover"}]},
-        {"id": "alt_perennial", "name": " / ".join(c.title() for c in current) + " / 2 years alfalfa",
-         "is_current": False, "requires": ["hay_equipment"],
-         "steps": steps(current) + steps(["alfalfa", "alfalfa"])},
-    ]
+# The current rotation has no template, so it gets this baseline text.
+CURRENT_TEXT = {
+    "why": "Your current rotation, replayed through the same 21 years as the baseline for comparison.",
+    "benefits": [],
+    "risks_for_local_review": [
+        "Results use FAO-56 regional crop values, not measurements from this field; compare them with your own yield records.",
+    ],
+    "data_gaps": [],
+    "sources": [],
+    "market_requirements": "",
+}
 
 
-# ---------- 3. The endpoint ----------
+def rotation_text(rot):
+    """why / benefits / risks / gaps / sources: from the template, plus crop-data gaps for this rotation's crops."""
+    t = rot["template"] or CURRENT_TEXT
+    crops_here = {s["main_crop"] for s in rot["steps"]} | {s["cover_crop"] for s in rot["steps"] if s["cover_crop"]}
+    crop_gaps = [g["text"] for g in CROP_DATA_GAPS if g["crop"] in crops_here]
+    market = t.get("market_requirements", "")
+    return {
+        "why": t["why"],
+        "benefits": t["benefits"],
+        "risks_for_local_review": t["risks_for_local_review"],
+        "data_gaps": t["data_gaps"] + crop_gaps,
+        "sources": t["sources"],
+        "market_requirements": market if isinstance(market, str) else "; ".join(market),
+    }
+
+
+# 3. The endpoint
 @app.post("/api/analyze")
 def analyze(req: AnalyzeRequest):
     lat = req.lat if req.lat is not None else DEFAULT_LAT
     lon = req.lon if req.lon is not None else DEFAULT_LON
     field_name = req.field_name or req.name or "Your field"
 
-    # --- Real NASA data ---
+    #  Real NASA data 
     daily = get_daily(lat, lon)
     monthly = monthly_by_year(daily)
     normals = monthly_normals(monthly).reset_index()
     years =sorted(monthly.index.get_level_values("year").unique())
 
-    # --- What the field really grew (USDA CDL). Used when the farmer didn't tell us. ---
+    #  What the field really grew (USDA CDL). Used when the farmer didn't tell us. 
     history = crop_history(lat, lon)
     detected, fit = detect_rotation(history, int(years[0]))
     if req.current_rotation:                                       # the farmer told us
@@ -106,11 +118,10 @@ def analyze(req: AnalyzeRequest):
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
         "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "rotations[].scores.profit",
-        "rotations[].why/evidence/benefits/data_gaps/risks_for_local_review",
+        "rotations[].scores.profit", "rotations[].confidence", "rotations[].water_stress.worst_month",
     ]
 
-    # --- Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) ---
+    #  Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) 
     zones, elevation_m, terrain = risk_zones(lat, lon)
     response["risk_zones"] = zones
 
@@ -193,7 +204,7 @@ def analyze(req: AnalyzeRequest):
         ],
     }
 
-    # --- Rotations: real replay through every past year ---
+    # Rotations: real replay through every past year
     samples_by_id = {r["id"]: r for r in SAMPLE["rotations"]}
     rotations_out = []
     for rot in build_rotations(current):
@@ -214,6 +225,7 @@ def analyze(req: AnalyzeRequest):
             "sequence": [s["main_crop"] + (f" + {s['cover_crop']}" if s["cover_crop"] else "") for s in rot["steps"]],
             "scores": scores,
             "evidence": evidence,
+            **rotation_text(rot),          # Robajr's why / benefits / risks / gaps / sources
             "water_stress": {
                 **sample["water_stress"],          # keeps worst_month (placeholder)
                 "years_with_stress": len(bad_years),

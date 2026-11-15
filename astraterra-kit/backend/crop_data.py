@@ -109,10 +109,10 @@ def load_crops():
             "notes": row["notes"] if pd.notna(row["notes"]) else None,
         }
         if kc is None:
-            gaps.append(f"{row['common_name']}: monthly water-use curve uses placeholder values"
-                        + (" (perennial: CSV stages describe one cutting cycle)" if perennial else " (FAO values not filled in)"))
+            gaps.append({"crop": crop_id, "text": f"{row['common_name']}: monthly water-use curve uses placeholder values"
+                        + (" (perennial: CSV stages describe one cutting cycle)" if perennial else " (FAO values not filled in)")})
         if root is None:
-            gaps.append(f"{row['common_name']}: root depth not verified, placeholder used")
+            gaps.append({"crop": crop_id, "text": f"{row['common_name']}: root depth not verified, placeholder used"})
     return crops, gaps
 
 
@@ -130,4 +130,4 @@ if __name__ == "__main__":
                       f"  root {ROOT_DEPTH_M.get(crop_id)} m")
     print("\nData gaps:")
     for g in gaps:
-        print(" -", g)
+        print(" -", g["text"])
