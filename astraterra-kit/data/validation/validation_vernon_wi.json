@@ -1,0 +1,279 @@
+{
+  "county": "Vernon County, WI",
+  "source": "USDA NASS Quick Stats, county yields (bu/acre)",
+  "crops": {
+    "corn": {
+      "years_compared": 21,
+      "spearman_stress_vs_yield": -0.31,
+      "model_worst_years": [
+        2012,
+        2023,
+        2013
+      ],
+      "real_worst_years": [
+        2012,
+        2023,
+        2007
+      ],
+      "worst_years_matching": [
+        2012,
+        2023
+      ],
+      "years": [
+        {
+          "year": 2005,
+          "yield": 168.0,
+          "yield_vs_trend_pct": 15.9,
+          "model_stress_pct": 3
+        },
+        {
+          "year": 2006,
+          "yield": 157.0,
+          "yield_vs_trend_pct": 7.3,
+          "model_stress_pct": 5
+        },
+        {
+          "year": 2007,
+          "yield": 127.0,
+          "yield_vs_trend_pct": -13.9,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2008,
+          "yield": 142.0,
+          "yield_vs_trend_pct": -4.6,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2009,
+          "yield": 158.0,
+          "yield_vs_trend_pct": 5.3,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2010,
+          "yield": 157.9,
+          "yield_vs_trend_pct": 4.3,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2011,
+          "yield": 153.1,
+          "yield_vs_trend_pct": 0.3,
+          "model_stress_pct": 2
+        },
+        {
+          "year": 2012,
+          "yield": 127.4,
+          "yield_vs_trend_pct": -17.2,
+          "model_stress_pct": 28
+        },
+        {
+          "year": 2013,
+          "yield": 138.8,
+          "yield_vs_trend_pct": -10.6,
+          "model_stress_pct": 9
+        },
+        {
+          "year": 2014,
+          "yield": 159.2,
+          "yield_vs_trend_pct": 1.7,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2015,
+          "yield": 152.6,
+          "yield_vs_trend_pct": -3.3,
+          "model_stress_pct": 2
+        },
+        {
+          "year": 2016,
+          "yield": 174.8,
+          "yield_vs_trend_pct": 9.9,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2017,
+          "yield": 159.6,
+          "yield_vs_trend_pct": -0.4,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2018,
+          "yield": 164.7,
+          "yield_vs_trend_pct": 1.9,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2019,
+          "yield": 155.3,
+          "yield_vs_trend_pct": -4.6,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2020,
+          "yield": 176.0,
+          "yield_vs_trend_pct": 7.2,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2021,
+          "yield": 169.3,
+          "yield_vs_trend_pct": 2.3,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2022,
+          "yield": 172.4,
+          "yield_vs_trend_pct": 3.4,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2023,
+          "yield": 140.0,
+          "yield_vs_trend_pct": -16.7,
+          "model_stress_pct": 17
+        },
+        {
+          "year": 2024,
+          "yield": 177.9,
+          "yield_vs_trend_pct": 5.1,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2025,
+          "yield": 182.1,
+          "yield_vs_trend_pct": 6.8,
+          "model_stress_pct": 0
+        }
+      ]
+    },
+    "soybean": {
+      "years_compared": 18,
+      "spearman_stress_vs_yield": -0.25,
+      "model_worst_years": [
+        2012,
+        2023,
+        2006
+      ],
+      "real_worst_years": [
+        2023,
+        2008,
+        2013
+      ],
+      "worst_years_matching": [
+        2023
+      ],
+      "years": [
+        {
+          "year": 2005,
+          "yield": 50.0,
+          "yield_vs_trend_pct": 21.5,
+          "model_stress_pct": 10
+        },
+        {
+          "year": 2006,
+          "yield": 45.0,
+          "yield_vs_trend_pct": 8.0,
+          "model_stress_pct": 18
+        },
+        {
+          "year": 2007,
+          "yield": 38.0,
+          "yield_vs_trend_pct": -9.9,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2008,
+          "yield": 35.5,
+          "yield_vs_trend_pct": -16.9,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2009,
+          "yield": 39.5,
+          "yield_vs_trend_pct": -8.7,
+          "model_stress_pct": 4
+        },
+        {
+          "year": 2010,
+          "yield": 49.1,
+          "yield_vs_trend_pct": 12.2,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2011,
+          "yield": 48.1,
+          "yield_vs_trend_pct": 8.6,
+          "model_stress_pct": 6
+        },
+        {
+          "year": 2012,
+          "yield": 42.6,
+          "yield_vs_trend_pct": -5.0,
+          "model_stress_pct": 38
+        },
+        {
+          "year": 2013,
+          "yield": 40.4,
+          "yield_vs_trend_pct": -10.9,
+          "model_stress_pct": 13
+        },
+        {
+          "year": 2014,
+          "yield": 44.2,
+          "yield_vs_trend_pct": -3.7,
+          "model_stress_pct": 3
+        },
+        {
+          "year": 2015,
+          "yield": 42.5,
+          "yield_vs_trend_pct": -8.4,
+          "model_stress_pct": 7
+        },
+        {
+          "year": 2016,
+          "yield": 51.4,
+          "yield_vs_trend_pct": 9.5,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2017,
+          "yield": 44.8,
+          "yield_vs_trend_pct": -5.6,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2020,
+          "yield": 50.3,
+          "yield_vs_trend_pct": 2.6,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2021,
+          "yield": 53.9,
+          "yield_vs_trend_pct": 8.7,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2022,
+          "yield": 53.2,
+          "yield_vs_trend_pct": 6.2,
+          "model_stress_pct": 0
+        },
+        {
+          "year": 2023,
+          "yield": 40.4,
+          "yield_vs_trend_pct": -20.2,
+          "model_stress_pct": 31
+        },
+        {
+          "year": 2025,
+          "yield": 58.1,
+          "yield_vs_trend_pct": 12.4,
+          "model_stress_pct": 0
+        }
+      ]
+    }
+  }
+}
