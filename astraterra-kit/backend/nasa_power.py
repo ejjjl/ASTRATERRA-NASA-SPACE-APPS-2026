@@ -54,7 +54,7 @@ def _download(lat: float, lon: float) -> dict:
         "end": f"{END_YEAR}1231",
         "format": "JSON",
     }
-    response = requests.get(POWER_URL, params=params, timeout=120)
+    response = requests.get(POWER_URL, params=params, timeout=90)
     response.raise_for_status()      # crash with a clear error if NASA returns an error
     return response.json()
 

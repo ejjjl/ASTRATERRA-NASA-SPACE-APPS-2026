@@ -12,6 +12,7 @@ SoilGrids: https://www.isric.org/explore/soilgrids  (REST API, no key needed)
 """
 
 import json
+import time
 from pathlib import Path
 
 import requests
@@ -38,6 +39,7 @@ DEFAULT_SOIL = {"clay_pct": 20.0, "sand_pct": 40.0, "organic_carbon_pct": 1.5, "
 
 # SoilGrids masks out towns and water. If the exact point is empty, look ~3 km around it.
 NEARBY_STEPS = [(0, 0), (0.03, 0), (-0.03, 0), (0, 0.03), (0, -0.03)]
+MAX_SEARCH_S = 30    # give up on the nearby search after this many seconds
 
 
 def _query(lat, lon):
@@ -46,7 +48,7 @@ def _query(lat, lon):
         "lat": lat, "lon": lon, "value": "mean",
         "property": list(PROPERTIES), "depth": list(DEPTHS),
     }
-    resp = requests.get(SOILGRIDS_URL, params=params, timeout=60)
+    resp = requests.get(SOILGRIDS_URL, params=params, timeout=20)
     resp.raise_for_status()
 
     soil = {}
@@ -70,7 +72,10 @@ def get_soil(lat, lon):
     if cache.exists():
         return json.loads(cache.read_text())
 
+    started = time.perf_counter()
     for dlat, dlon in NEARBY_STEPS:
+        if time.perf_counter() - started > MAX_SEARCH_S:
+            break                            # searching too long: use the default soil
         try:
             soil = _query(lat + dlat, lon + dlon)
         except requests.RequestException:

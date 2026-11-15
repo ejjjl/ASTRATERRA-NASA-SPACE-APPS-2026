@@ -20,7 +20,7 @@ CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "cache"
 FIRST_YEAR, LAST_YEAR = 2008, 2025      # CDL covers the whole US from 2008
 
 # CDL code -> our crop id (only crops our water model knows)
-CDL_TO_CROP = {1: "corn", 5: "soybean", 24: "wheat_winter", 26: "wheat_winter", 36: "alfalfa"}
+CDL_TO_CROP = {1: "corn", 4: "sorghum", 5: "soybean", 24: "wheat_winter", 26: "wheat_winter", 36: "alfalfa"}
 # Codes that mean "this is not a farm field"
 NOT_CROPLAND = {111, 112, 121, 122, 123, 124, 131, 141, 142, 143, 190, 195}  # water, towns, forest, wetland
 
@@ -54,7 +54,7 @@ def to_albers(lat, lon):
 def _one_year(year, x, y):
     """Ask CropScape for one year. Returns {"year", "code", "name"} or None."""
     try:
-        resp = requests.get(CDL_URL, params={"year": year, "x": x, "y": y}, timeout=30)
+        resp = requests.get(CDL_URL, params={"year": year, "x": x, "y": y}, timeout=15)
         resp.raise_for_status()
         text = resp.text                       # looks like: {x: ..., value: 5, category: "Soybeans", ...}
         code = int(text.split("value:")[1].split(",")[0])
@@ -68,7 +68,10 @@ def crop_history(lat, lon):
     """One entry per year 2008-2025 (cached). Empty list outside the US or if the server is down."""
     cache = CACHE_DIR / f"cdl_{lat:.4f}_{lon:.4f}.json"
     if cache.exists():
-        return json.loads(cache.read_text())
+        history = json.loads(cache.read_text())
+        for r in history:                        # re-map, so crops added later (e.g. sorghum) apply to old caches
+            r["crop"] = CDL_TO_CROP.get(r["code"])
+        return history
 
     x, y = to_albers(lat, lon)
     years = range(FIRST_YEAR, LAST_YEAR + 1)

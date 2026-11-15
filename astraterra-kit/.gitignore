@@ -17,3 +17,12 @@ data/cache/*
 !data/cache/cdl_43.7077_-90.9358.json
 !data/cache/terrain_43.7077_-90.9388.json
 !data/cache/cdl_43.7077_-90.9388.json
+# Extra demo farms: Iowa corn/soy (flat, 2012 drought) and Kansas mixed wheat rotation
+!data/cache/power_42.00_-93.70_2005_2025.json
+!data/cache/soil_42.00_-93.70.json
+!data/cache/terrain_42.0000_-93.7000.json
+!data/cache/cdl_42.0000_-93.7000.json
+!data/cache/power_38.40_-97.55_2005_2025.json
+!data/cache/soil_38.40_-97.55.json
+!data/cache/terrain_38.4000_-97.5500.json
+!data/cache/cdl_38.4000_-97.5500.json

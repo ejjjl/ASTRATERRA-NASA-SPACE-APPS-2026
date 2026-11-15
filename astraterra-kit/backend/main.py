@@ -15,10 +15,13 @@ Each placeholder is listed in the response under "_placeholders"
 
 import copy
 import json
+import logging
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from crops import CROP_DATA_GAPS, MAIN_CROP_KC, year_kc
@@ -34,6 +37,37 @@ from explain import confidence, field_facts, fit_breakdown, recommendation, rota
 from journal import journal_clues
 
 app = FastAPI(title="ASTRATERRA API")
+log = logging.getLogger("uvicorn.error")      # prints in the same console as uvicorn
+
+
+def fetch_all(lat, lon):
+    """
+    Download the 4 data sources AT THE SAME TIME instead of one after another,
+    so a new place takes as long as the slowest source, not all four added up.
+    Each source is cached after the first time, so repeat visits are instant.
+    Returns (results, seconds per source).
+    """
+    jobs = {
+        "nasa_power": lambda: get_daily(lat, lon),
+        "usda_cdl": lambda: crop_history(lat, lon),
+        "srtm_terrain": lambda: risk_zones(lat, lon),
+        "soilgrids": lambda: get_soil(lat, lon),
+    }
+    def timed(name):
+        start = time.perf_counter()
+        result = jobs[name]()
+        return result, round(time.perf_counter() - start, 2)
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {name: pool.submit(timed, name) for name in jobs}
+        results, timings = {}, {}
+        for name, future in futures.items():
+            try:
+                results[name], timings[name] = future.result()
+            except Exception as err:                      # only NASA POWER is essential (see below)
+                results[name], timings[name] = None, None
+                log.warning("%s failed: %s", name, err)
+    return results, timings
 
 # Demo farm (Driftless Area, near Bloomingdale, WI): hay until 2019, corn/soy since 2020,
 # on hilly ground. Used when the frontend does not send a location.
@@ -99,14 +133,20 @@ def analyze(req: AnalyzeRequest):
     lon = req.lon if req.lon is not None else DEFAULT_LON
     field_name = req.field_name or req.name or "Your field"
 
+    started = time.perf_counter()
+    fetched, timings = fetch_all(lat, lon)
+    if fetched["nasa_power"] is None:
+        # Without weather data there is nothing to analyse: say so clearly instead of crashing.
+        raise HTTPException(status_code=502, detail="NASA POWER did not respond. Please try again in a minute.")
+
     #  Real NASA data 
-    daily = get_daily(lat, lon)
+    daily = fetched["nasa_power"]
     monthly = monthly_by_year(daily)
     normals = monthly_normals(monthly).reset_index()
     years =sorted(monthly.index.get_level_values("year").unique())
 
     #  What the field really grew (USDA CDL). Used when the farmer didn't tell us. 
-    history = crop_history(lat, lon)
+    history = fetched["usda_cdl"] or []
     detected, fit = detect_rotation(history, int(years[0]))
     if req.current_rotation:                                       # the farmer told us
         wanted, rotation_source = req.current_rotation, "farmer"
@@ -124,7 +164,7 @@ def analyze(req: AnalyzeRequest):
     ]
 
     #  Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) 
-    zones, elevation_m, terrain = risk_zones(lat, lon)
+    zones, elevation_m, terrain = fetched["srtm_terrain"] or ({"type": "FeatureCollection", "features": []}, None, {})
     response["risk_zones"] = zones
 
     response["field"] = {
@@ -142,7 +182,7 @@ def analyze(req: AnalyzeRequest):
     response["climate"]["frost"] = frost_dates(daily)
 
     # Soil: SoilGrids, then the farmer's own numbers on top ---
-    soil_values, soil_source = apply_overrides(get_soil(lat, lon), req.soil_overrides)
+    soil_values, soil_source = apply_overrides(fetched["soilgrids"] or get_soil(lat, lon), req.soil_overrides)
     per_metre = water_per_metre(soil_values["clay_pct"], soil_values["sand_pct"], soil_values["organic_carbon_pct"])
     response["soil"] = {**soil_values, "water_per_metre_mm": per_metre, "source": soil_source}
 
@@ -252,6 +292,12 @@ def analyze(req: AnalyzeRequest):
 
     response["rotations"] = rotations_out
     response["recommendation"] = recommendation(rotations_out, req.priorities, req.constraints)
+
+    # Timing log: which part was slow? (seconds; cached sources take ~0.01 s)
+    timings["model_and_scoring"] = round(time.perf_counter() - started - max(t or 0 for t in timings.values()), 2)
+    timings["total"] = round(time.perf_counter() - started, 2)
+    response["_timings_s"] = timings
+    log.info("analyze %.4f,%.4f timings: %s", lat, lon, timings)
     return response
 
 

@@ -60,7 +60,7 @@ def get_elevation_grid(lat, lon):
     points = [p for row in _grid_points(lat, lon) for p in row]
     locations = "|".join(f"{p_lat:.6f},{p_lon:.6f}" for p_lat, p_lon in points)
     try:
-        resp = requests.post(TOPO_URL, data={"locations": locations}, timeout=30)
+        resp = requests.post(TOPO_URL, data={"locations": locations}, timeout=20)
         resp.raise_for_status()
         elevations = [r["elevation"] for r in resp.json()["results"]]
     except (requests.RequestException, KeyError, ValueError):
