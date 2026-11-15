@@ -7,6 +7,20 @@ from nasa_power import get_daily
 HEAT_DAY_C = 32  #max temp anything above -> heat stress day
 HEAVY_RAIN_MM = 25 #daily rain anything above -> heavy rain day
 
+# Growing degree days (GDD): "heat units" a crop collects each day, which drive how fast it grows.
+# Standard US corn method (86/50 F): cap Tmax at 30 C, floor Tmin at 10 C, base 10 C.
+GDD_BASE_C = 10
+GDD_CAP_C = 30
+
+
+def add_gdd(df):
+    """Add daily growing degree days."""
+    df = df.copy()
+    tmax = df["temp_max_c"].clip(lower=GDD_BASE_C, upper=GDD_CAP_C)
+    tmin = df["temp_min_c"].clip(lower=GDD_BASE_C, upper=GDD_CAP_C)
+    df["gdd"] = (tmax + tmin) / 2 - GDD_BASE_C
+    return df
+
 def add_et0(df):
     """Add daily ET0 (mm/day) using the Hargreaves formula (FAO-56, eq. 52)."""
     df = df.copy()
@@ -22,6 +36,7 @@ def monthly_by_year(df):
     """Daily data, one row per (year,month)"""
     df = df.copy()
     df = add_et0(df)
+    df = add_gdd(df)
     df["year"] = df.index.year
     df["month"] = df.index.month
     df["is_heat_day"] = df["temp_max_c"] > HEAT_DAY_C
@@ -36,6 +51,7 @@ def monthly_by_year(df):
         heat_days=("is_heat_day", "sum"),
         heavy_rain_days=("is_heavy_rain_day", "sum"),
         soil_moisture_root=("soil_moisture_root", "mean"),
+        gdd=("gdd", "sum"),
     )
 
 def monthly_normals(monthly):

@@ -1,0 +1,79 @@
+{
+  "_schema": {
+    "about": "Rotation templates: alternatives built from the farmer's CURRENT rotation. Read by the backend, replayed through 2005-2025 and scored. Crop timing lives in data/crops/crops.csv; bare months are computed by the backend, not entered here.",
+    "id": "unique id, e.g. alt_cover",
+    "name": "shown on the card; {current} is replaced by the farmer's rotation, e.g. 'Corn / Soybean'",
+    "idea": "one of: cover_crop | small_grain | legume | perennial | drought_tolerant",
+    "steps": "the sequence, one entry per block of years. {\"use_current\": true} = the farmer's current rotation (optionally with \"cover_crop\" added to every year). Otherwise {\"main_crop\": crop_id, \"cover_crop\": crop_id or null, \"years\": n}. crop_ids must exist in crops.csv",
+    "requires": "constraint ids the farmer must have, matching the frontend checkboxes: irrigation | hay_equipment (ask before adding new ones)",
+    "market_requirements": "plain-text market needs, e.g. 'Local hay buyer or own livestock'",
+    "why": "one plain sentence: the agronomic idea behind this template",
+    "benefits": "general benefits (the backend adds field-specific ones with numbers)",
+    "risks_for_local_review": "things a local agronomist/farmer should check",
+    "data_gaps": "what we could not verify or do not model",
+    "sources": "list of {\"title\", \"url\"} supporting the why/benefits/risks"
+  },
+  "templates": [
+    {
+      "id": "alt_cover",
+      "name": "{current} + cereal rye cover",
+      "idea": "cover_crop",
+      "steps": [{"use_current": true, "cover_crop": "cereal_rye"}],
+      "requires": [],
+      "market_requirements": [],
+      "why": "",
+      "benefits": [],
+      "risks_for_local_review": [],
+      "data_gaps": [],
+      "sources": []
+    },
+    {
+      "id": "alt_small_grain",
+      "name": "{current} / Winter wheat + red clover",
+      "idea": "small_grain",
+      "steps": [
+        {"use_current": true},
+        {"main_crop": "wheat_winter", "cover_crop": "red_clover", "years": 1}
+      ],
+      "requires": [],
+      "market_requirements": [],
+      "why": "",
+      "benefits": [],
+      "risks_for_local_review": [],
+      "data_gaps": [],
+      "sources": []
+    },
+    {
+      "id": "alt_perennial",
+      "name": "{current} / 2 years alfalfa",
+      "idea": "perennial",
+      "steps": [
+        {"use_current": true},
+        {"main_crop": "alfalfa", "cover_crop": null, "years": 2}
+      ],
+      "requires": ["hay_equipment"],
+      "market_requirements": [],
+      "why": "",
+      "benefits": [],
+      "risks_for_local_review": [],
+      "data_gaps": [],
+      "sources": []
+    },
+    {
+      "id": "alt_drought",
+      "name": "Sorghum / Soybean",
+      "idea": "drought_tolerant",
+      "steps": [
+        {"main_crop": "sorghum", "cover_crop": null, "years": 1},
+        {"main_crop": "soybean", "cover_crop": null, "years": 1}
+      ],
+      "requires": [],
+      "market_requirements": [],
+      "why": "",
+      "benefits": [],
+      "risks_for_local_review": [],
+      "data_gaps": [],
+      "sources": []
+    }
+  ]
+}

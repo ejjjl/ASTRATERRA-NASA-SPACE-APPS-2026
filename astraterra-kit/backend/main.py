@@ -28,6 +28,7 @@ from soil import get_soil, apply_overrides, water_per_metre
 from terrain import risk_zones
 from cdl import crop_history, detect_rotation, is_cropland
 from water_balance import simulate_rotation
+from scoring import score_rotation
 
 app = FastAPI(title="ASTRATERRA API")
 
@@ -105,7 +106,7 @@ def analyze(req: AnalyzeRequest):
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
         "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "rotations[].scores (except water and bare_months)",
+        "rotations[].scores.profit",
         "rotations[].why/evidence/benefits/data_gaps/risks_for_local_review",
     ]
 
@@ -145,6 +146,8 @@ def analyze(req: AnalyzeRequest):
             "heat_days": round(float(r.heat_days), 1),
             "heavy_rain_days": round(float(r.heavy_rain_days), 1),
             "soil_moisture_root": round(float(r.soil_moisture_root), 2),
+            "solar_mj": round(float(r.solar_mj), 1),      # average daily sunshine energy (MJ/m2/day)
+            "gdd": round(float(r.gdd)),                   # growing degree days this month (base 10 C)
         }
         for r in normals.itertuples()
     ]
@@ -157,6 +160,11 @@ def analyze(req: AnalyzeRequest):
         heat_days=("heat_days", "sum"),
         summer_soil_moisture_root=("soil_moisture_root", "mean"),
     )
+    # Season GDD (May-Sep) per year: is there enough heat to ripen a crop?
+    season = monthly[monthly.index.get_level_values("month").isin([5, 6, 7, 8, 9])]
+    by_year["season_gdd"] = season.groupby("year")["gdd"].sum()
+    # Soil moisture vs normal: + = wetter summer than the 21-year average, - = drier
+    by_year["soil_moisture_vs_normal"] = by_year["summer_soil_moisture_root"] - by_year["summer_soil_moisture_root"].mean()
     response["climate"]["yearly"] = [
         {
             "year": int(year),
@@ -164,6 +172,8 @@ def analyze(req: AnalyzeRequest):
             "summer_tmax_c": round(float(r.summer_tmax_c), 1),
             "heat_days": int(r.heat_days),
             "summer_soil_moisture_root": round(float(r.summer_soil_moisture_root), 2),
+            "soil_moisture_vs_normal": round(float(r.soil_moisture_vs_normal), 3),
+            "season_gdd": round(float(r.season_gdd)),
             "year_type": None,  # Brandon's clustering fills this in
         }
         for year, r in by_year.iterrows()
@@ -189,16 +199,11 @@ def analyze(req: AnalyzeRequest):
     for rot in build_rotations(current):
         replay = simulate_rotation(monthly, rot["steps"], per_metre)
         bad_years = [r for r in replay if r["outcome"] != "ok"]
-        avg_stress = sum(r["water_stress_pct"] for r in replay) / len(replay)
-
-        # Bare months averaged over the rotation's years
-        bare_counts = [len(year_kc(s["main_crop"], s["cover_crop"])[1]) for s in rot["steps"]]
-        avg_bare = sum(bare_counts) / len(bare_counts)
 
         sample = copy.deepcopy(samples_by_id.get(rot["id"], SAMPLE["rotations"][0]))
-        scores = sample["scores"]
-        scores["water"] = round(max(0.0, 1 - avg_stress / 30), 2)   # 0% avg stress -> 1.0, 30%+ -> 0
-        scores["bare_months"] = round(1 - avg_bare / 12, 2)         # 0 bare months -> 1.0
+        # Real scores + the evidence behind them (scoring.py). Profit: placeholder until prices are in.
+        scores, evidence = score_rotation(rot["steps"], replay, rain_risk, terrain.get("field_slope_pct"))
+        scores["profit"] = sample["scores"]["profit"]
 
         rotations_out.append({
             **sample,
@@ -208,6 +213,7 @@ def analyze(req: AnalyzeRequest):
             "requires": rot["requires"],
             "sequence": [s["main_crop"] + (f" + {s['cover_crop']}" if s["cover_crop"] else "") for s in rot["steps"]],
             "scores": scores,
+            "evidence": evidence,
             "water_stress": {
                 **sample["water_stress"],          # keeps worst_month (placeholder)
                 "years_with_stress": len(bad_years),
