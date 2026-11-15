@@ -19,3 +19,34 @@
 .rc-mo { text-align: center; font-size: .65rem; padding: 2px 0; border-radius: 3px; }
 .rc-mo.bare { background: #e8dcc0; }
 .rc-mo.cover { background: #cfe5d3; }
+
+/* ---- Replay: clickable years, legend, monthly detail (replay-detail.jsx) ---- */
+button.rc-sq { border: 0; padding: 0; cursor: pointer; width: 100%; height: 18px; }
+button.rc-sq:hover { filter: brightness(.9); }
+button.rc-sq:focus-visible { outline: 2px solid #1f2a22; outline-offset: 1px; }
+button.rc-sq.on { outline: 2px solid #1f2a22; outline-offset: 1px; }
+.rc-legend { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .7rem; color: #4a5a4f; margin: 6px 0 0; }
+.rc-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.rc-legend-hint { color: #6b776e; font-style: italic; }
+.rc-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.rc-key.ok { background: #cfe5d3; }
+.rc-key.stress { background: #e6a23c; }
+.rc-key.fail { background: #c0392b; }
+.rc-key.need { background: #d9cfb4; }
+.rc-key.got { background: #2f6b45; }
+.rc-key.soil { background: #2f7fc1; height: 3px; }
+.rc-key.short { background: #f3c1b9; }
+.rc-detail { margin-top: 8px; padding: 10px; border: 1px solid #d9d4c5; border-radius: 10px; background: #fbfaf5; }
+.rc-detail-head { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; }
+.rc-close { border: 0; background: none; font-size: 1.3rem; line-height: 1; cursor: pointer; min-width: 32px; min-height: 32px; color: #4a5a4f; }
+.rc-detail-sum { font-size: .8rem; margin: 4px 0 6px; color: #1f2a22; }
+.rc-chart { width: 100%; height: auto; display: block; }
+.rc-chart .rc-need { fill: #d9cfb4; }
+.rc-chart .rc-need.short { fill: #f3c1b9; }
+.rc-chart .rc-got { fill: #2f6b45; }
+.rc-chart .rc-got.off { fill: #9fb8a6; }
+.rc-chart .rc-soil { fill: none; stroke: #2f7fc1; stroke-width: 2; stroke-linejoin: round; }
+.rc-chart .rc-full { stroke: #2f7fc1; stroke-width: 1; stroke-dasharray: 4 3; opacity: .7; }
+.rc-chart .rc-base { stroke: #b9b3a3; stroke-width: 1; }
+.rc-chart .rc-axis { font-size: 9px; fill: #6b776e; }
+.rc-legend.small { font-size: .68rem; }
