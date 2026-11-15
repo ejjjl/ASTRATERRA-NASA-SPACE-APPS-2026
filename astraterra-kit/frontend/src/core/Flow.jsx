@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "./AppState.jsx";
 import FeatureBoundary from "./FeatureBoundary.jsx";
+import Busy from "./Busy.jsx";
 import { features } from "./registry.js";
 import { FlowCtx } from "./flowContext.js";
 import { loadSaved, save, clearSaved } from "./storage.js";
@@ -52,7 +53,7 @@ function Welcome({ farmName, onStart, onContinue, onReset }) {
 }
 
 export default function Flow() {
-  const { data, error, resetAll } = useApp();
+  const { data, error, loading, slow, resetAll } = useApp();
   const saved = useState(() => loadSaved())[0];
   const [farmName, setFarmName] = useState(saved.farmName || "");
   const [screen, setScreen] = useState("welcome");
@@ -91,12 +92,17 @@ export default function Flow() {
       </header>
 
       <main className="wrap">
+        {/* The welcome screen never waits on data, so no banner or dimming there. */}
+        {screen !== "welcome" && slow && <Busy />}
+        {screen !== "welcome" && error && data && !loading && (
+          <div className="err-banner no-print">Could not update for this location: {error}. Showing the last result.</div>
+        )}
         {screen === "welcome" ? (
           <Welcome farmName={farmName} onStart={start}
             onContinue={() => go(saved.screen && saved.screen !== "welcome" ? saved.screen : "field")}
             onReset={reset} />
         ) : (
-          <>
+          <div className={slow ? "dim" : ""}>
             <nav className="fl-steps no-print" aria-label="Progress">
               {STEPS.map((s, i) => (
                 <button key={s.id} onClick={() => go(s.id)}
@@ -135,7 +141,7 @@ export default function Flow() {
             <p className="fl-reset no-print">
               <button className="fl-link" onClick={reset}>Start over with a new farm</button>
             </p>
-          </>
+          </div>
         )}
       </main>
     </FlowCtx.Provider>

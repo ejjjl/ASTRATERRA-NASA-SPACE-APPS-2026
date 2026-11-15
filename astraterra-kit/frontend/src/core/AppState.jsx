@@ -6,7 +6,7 @@ const Ctx = createContext(null);
 export const useApp = () => useContext(Ctx);
 
 // Demo farm: hilly cropland near Bloomingdale, Wisconsin. Change these two numbers to move the demo.
-export const DEMO_FARM = { lat: 43.70767, lon: -90.93577 };
+export const DEMO_FARM = { lat: 43.70767, lon: -90.93877 };
 export const ASSUMED_ROTATION = ["corn", "soybean"];
 const DEFAULT_PRIORITIES = { water: 0.3, soil_health: 0.4, profit: 0.2, forage: 0.1 };
 const DEFAULT_CONSTRAINTS = { irrigation: false, hay_equipment: false };
@@ -50,7 +50,7 @@ export function AppProvider({ children }) {
       priorities,
       constraints,
       soil_overrides: survey.soil,
-      current_rotation: survey.currentRotation || ASSUMED_ROTATION,
+      current_rotation: survey.currentRotation || null,
     })
       .then((d) => {
         if (id !== reqId.current) return;
