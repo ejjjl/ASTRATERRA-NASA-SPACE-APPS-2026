@@ -1,0 +1,37 @@
+[
+  {
+    "term": "Evapotranspiration",
+    "definition": "Water transferred from the land to the atmosphere through evaporation from soil and water, and transpiration from plants.",
+    "source": "FAO Irrigation and Drainage Paper 56: https://www.fao.org/4/X0490E/x0490e00.htm"
+  },
+  {
+    "term": "Soil moisture anomaly",
+    "definition": "The difference between observed soil moisture and the long-term average for the same location and time of year.",
+    "source": "NASA Soil Moisture Active Passive: https://smap.jpl.nasa.gov/"
+  },
+  {
+    "term": "Frost risk",
+    "definition": "The possibility that freezing temperatures will damage a crop. Risk depends on temperature, exposure, crop type, and growth stage.",
+    "source": "National Weather Service: https://www.weather.gov/"
+  },
+  {
+    "term": "Water balance",
+    "definition": "An accounting of water entering, leaving, and being stored in a field, including precipitation, irrigation, evapotranspiration, runoff, and drainage.",
+    "source": "USGS Water Science School: https://www.usgs.gov/special-topics/water-science-school"
+  },
+  {
+    "term": "Growing degree days",
+    "definition": "A measure of accumulated warmth above a crop's base temperature, used to estimate plant development during a growing season.",
+    "source": "Penn State Extension: https://extension.psu.edu/understanding-growing-degree-days"
+  },
+  {
+    "term": "Cover crop",
+    "definition": "A crop grown mainly to protect or improve soil between or alongside main crops, rather than to be harvested as the primary product.",
+    "source": "USDA Natural Resources Conservation Service: https://www.nrcs.usda.gov/"
+  },
+  {
+    "term": "Nitrogen-fixing",
+    "definition": "The process by which certain microorganisms convert atmospheric nitrogen into forms plants can use. Many legumes support this process through root-associated bacteria.",
+    "source": "USDA Natural Resources Conservation Service: https://www.nrcs.usda.gov/"
+  }
+]
