@@ -7,37 +7,6 @@ const pct = (v) => Math.round((v ?? 0) * 100);
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 const MONTHS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
-function Priorities() {
-  const { priorities, setPriorities, constraints, setConstraints } = useApp();
-  return (
-    <div className="panel">
-      <h3>What matters most to you?</h3>
-      {Object.entries(PRIORITY_LABELS).map(([key, label]) => (
-        <label key={key} className="slider">
-          <span>{label}</span>
-          <input
-            type="range" min="0" max="1" step="0.05"
-            value={priorities[key]}
-            onChange={(e) => setPriorities({ ...priorities, [key]: +e.target.value })}
-          />
-          <span className="val">{pct(priorities[key])}</span>
-        </label>
-      ))}
-      <h3>What do you have?</h3>
-      <label className="check">
-        <input type="checkbox" checked={constraints.irrigation}
-          onChange={(e) => setConstraints({ ...constraints, irrigation: e.target.checked })} />
-        Irrigation available
-      </label>
-      <label className="check">
-        <input type="checkbox" checked={constraints.hay_equipment}
-          onChange={(e) => setConstraints({ ...constraints, hay_equipment: e.target.checked })} />
-        Hay equipment available
-      </label>
-    </div>
-  );
-}
-
 function ScoreBars({ scores }) {
   return (
     <div className="rc-bars">
@@ -151,7 +120,6 @@ function RotationCompare() {
   );
   return (
     <>
-      <Priorities />
       <div className="grid">
         {ranked.map((r, i) => <RotationCard key={r.id} r={r} rank={i + 1} />)}
       </div>
@@ -159,4 +127,4 @@ function RotationCompare() {
   );
 }
 
-export default { id: "rotation-compare", title: "Rotation comparison", order: 20, Component: RotationCompare };
+export default { id: "rotation-compare", title: "All rotations compared", order: 20, screen: "report", Component: RotationCompare };

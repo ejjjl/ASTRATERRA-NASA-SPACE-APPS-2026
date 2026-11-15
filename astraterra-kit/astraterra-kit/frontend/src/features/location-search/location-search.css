@@ -1,0 +1,6 @@
+.ls-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.ls-input { flex: 1 1 260px; padding: 12px; font-size: 1rem; border: 1px solid #d9d4c5; border-radius: 10px; min-height: 44px; box-sizing: border-box; }
+.ls-results { list-style: none; padding: 0; margin: 8px 0; border: 1px solid #d9d4c5; border-radius: 10px; overflow: hidden; }
+.ls-results li + li { border-top: 1px solid #ece8db; }
+.ls-results button { display: block; width: 100%; text-align: left; background: #fff; border: 0; padding: 12px; font-size: .95rem; cursor: pointer; }
+.ls-results button:hover { background: #f1f6f2; }

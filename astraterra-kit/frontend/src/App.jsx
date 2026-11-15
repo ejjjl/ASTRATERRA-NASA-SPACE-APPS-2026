@@ -1,6 +1,5 @@
 import { AppProvider, useApp } from "./core/AppState.jsx";
-import FeatureBoundary from "./core/FeatureBoundary.jsx";
-import { features } from "./core/registry.js";
+import Flow from "./core/Flow.jsx";
 import "./app-ui.css";
 
 const FETCH_MSG = "Fetching 21 years of NASA data and soil information for this spot...";
@@ -20,54 +19,33 @@ function Busy() {
 
 function Shell() {
   const { data, error, loading, slow } = useApp();
-
-  // First load: nothing to show yet. Only show the banner if it is actually slow.
-  if (!data) {
-    return (
-      <main className="wrap">
-        <h1>ASTRATERRA</h1>
-        {error ? <div className="err-banner">Could not load analysis: {error}</div> : slow && <Busy />}
-      </main>
-    );
-  }
-
   return (
-    <main className="wrap">
-      {slow && <Busy />}
-      {error && !loading && (
-        <div className="err-banner">
-          Could not update for this location: {error}. Showing the last result.
+    <>
+      {slow && <div className="wrap no-print"><Busy /></div>}
+      {error && data && !loading && (
+        <div className="wrap no-print">
+          <div className="err-banner">Could not update for this location: {error}. Showing the last result.</div>
         </div>
       )}
 
-      <h1>ASTRATERRA</h1>
-      <p className="tag">
-        Compare crop rotations for {data.field.name}, using NASA data and what you know about your field.
-      </p>
-
       <div className={slow ? "dim" : ""}>
-        {features.map(({ id, title, Component }) => (
-          <section key={id} id={id}>
-            <h2>{title}</h2>
-            <FeatureBoundary title={title}>
-              <Component />
-            </FeatureBoundary>
-          </section>
-        ))}
+        <Flow />
       </div>
 
-      <footer>
-        {(data.disclaimers || []).map((d, i) => (
-          <p key={i}>{d}</p>
-        ))}
-        <p className="data-credit">
-          Data: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noreferrer">NASA POWER</a>,{" "}
-          <a href="https://www.earthdata.nasa.gov/data/instruments/srtm" target="_blank" rel="noreferrer">NASA SRTM</a>,{" "}
-          <a href="https://soilgrids.org/" target="_blank" rel="noreferrer">SoilGrids 2.0</a>{" "}
-          (ISRIC, CC-BY 4.0)
-        </p>
-      </footer>
-    </main>
+      {data && (
+        <footer className="wrap">
+          {(data.disclaimers || []).map((d, i) => (
+            <p key={i}>{d}</p>
+          ))}
+          <p className="data-credit">
+            Data: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noreferrer">NASA POWER</a>,{" "}
+            <a href="https://www.earthdata.nasa.gov/data/instruments/srtm" target="_blank" rel="noreferrer">NASA SRTM</a>,{" "}
+            <a href="https://soilgrids.org/" target="_blank" rel="noreferrer">SoilGrids 2.0</a>{" "}
+            (ISRIC, CC-BY 4.0)
+          </p>
+        </footer>
+      )}
+    </>
   );
 }
 

@@ -61,7 +61,11 @@ function FieldMap() {
 
   // move marker when field changes
   useEffect(() => {
-    if (field && markerRef.current) markerRef.current.setLatLng([field.lat, field.lon]);
+    if (!field || !markerRef.current) return;
+    markerRef.current.setLatLng([field.lat, field.lon]);
+    // If the pin was set from the search box and is off screen, bring it into view.
+    const map = mapRef.current;
+    if (map && !map.getBounds().contains([field.lat, field.lon])) map.setView([field.lat, field.lon], 14);
   }, [field]);
 
   // draw risk zones
@@ -115,4 +119,4 @@ function FieldMap() {
   );
 }
 
-export default { id: "field-map", title: "Your field", order: 10, Component: FieldMap };
+export default { id: "field-map", title: "Your field", order: 10, screen: "field", Component: FieldMap };
