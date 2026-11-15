@@ -13,7 +13,6 @@ Required for submission. Add a row whenever you use a new tool, dataset, or AI a
 | Source | Provider | What we use it for | Notes |
 |---|---|---|---|
 | NASA POWER (agriculture community) | NASA | Daily temperature, rainfall, solar radiation, humidity, root-zone soil wetness 2005-2025: ET0, water bucket, frost dates, replay | Soil wetness is MERRA-2 model output. Cached per location |
-| MODIS NDVI (ORNL DAAC) | NASA | Vegetation greenness, bare-field detection | 250 m, 16-day |
 | SRTM 30 m via OpenTopoData | NASA (data), OpenTopoData (API) | Field elevation, slope (erosion zones), low spots (frost pockets) | 81 points in 1 call per field, cached. Public API limits respected: max 100 points/call, 1 call/sec, 1000 calls/day |
 | SoilGrids 2.0 REST API | ISRIC | Clay, sand, organic carbon, pH (0-100 cm average) | Not NASA; farmer can override. CC-BY 4.0, credited in app + README. Fair-use API, cached so each field is queried once |
 | Cropland Data Layer (CDL) via CropScape | USDA NASS | Real crop history of the field 2008-2025 (30 m), auto-detects the current rotation, flags pins on towns/forest | Public domain, US only, cached per field |
@@ -41,3 +40,4 @@ Non-government sources are allowed if we follow each site's data-use rules:
 
 ## Future work (not implemented)
 SMAP, GRACE-FO, ECOSTRESS, GPM, TEMPO. Require Earthdata login or heavy file processing.
+MODIS NDVI (ORNL DAAC): planned to verify bare months from satellite greenness; not implemented (bare months come from the crop calendar).

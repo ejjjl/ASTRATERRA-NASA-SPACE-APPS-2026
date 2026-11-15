@@ -43,6 +43,8 @@ In southwestern Wisconsin's Driftless Area the land is steep: bare soil on slope
    - Monthly crop water demand from FAO-56 crop coefficients (Kc curves built from each crop's planting window and growth stages).
    - A soil water "bucket": plant-available water per metre from soil texture (Saxton & Rawls, 2006) × the crop's effective root depth. The crop is stressed below 50% of available water (FAO-56).
    - Every rotation is replayed year by year, carrying soil water from one year to the next.
+   - **Year types (machine learning):** k-means clustering groups the 21 summers into *hot/dry*, *normal* and *wet/cool* using summer rain, summer maximum temperature and root-zone soil moisture (standardized so each counts equally). We chose k-means because it is simple, works on small data and its groups are easy to explain; on the Wisconsin demo farm 2012 and 2023 fall in the hot/dry group. With only 21 years the groups are indicative, not definitive.
+   - **Climate trends:** a Mann-Kendall test and Sen's slope on nine yearly values (summer highs, rain, heat days, soil moisture, growing-season heat, frost dates). Only statistically significant trends (p < 0.05) are reported as trends; on the Wisconsin farm year-to-year swings are larger than any 21-year trend, while in Iowa the frost-free season is lengthening about 10 days per decade.
    - Slope and low spots come from the elevation grid (USDA slope classes for erosion levels).
 4. **Decision.** Rule-based scores (water, bare months, erosion, nitrogen, organic matter, pest-cycle breaks, forage) are weighted by the farmer's priorities; rotations that need equipment the farmer lacks are excluded from the recommendation. Every sentence shown is generated from these numbers, so every claim traces back to a value and its source. **No AI model decides the scores.**
 
@@ -108,9 +110,9 @@ Open http://localhost:5173. The demo farms (Driftless Area WI 43.70767, -90.9387
 
 ## Team
 
-- **Elaa:** backend, data pipeline, water model, scoring, validation
+- **Elaa:** backend, data pipeline, water model, scoring, climate trends, validation
 - **Alex:** frontend, map and charts, guided flow
 - **Robel:** agriculture research: crop database, rotation templates, soil questionnaire
-- **Brandon:** climate trends and year-type clustering
+- **Brandon:** k-means year-type clustering (machine learning)
 
 **AI use:** Claude (Anthropic) assisted with planning, writing and explaining code, debugging and documentation; Cursor IDE assisted frontend development. All AI-assisted code was reviewed and tested by the team. Scores and recommendations are computed by deterministic rules, not by an AI model.

@@ -105,7 +105,9 @@ def detect_rotation(history, start_year, recent=8):
         for pos in range(period):
             crops = [h["crop"] for h in recent_years if (h["year"] - start_year) % period == pos]
             if crops:
-                pattern[pos] = max(set(crops), key=crops.count)
+                # Most common crop in this slot; on a tie, the one grown most recently
+                # (crops is in year order, so a higher last index = more recent). Deterministic.
+                pattern[pos] = max(set(crops), key=lambda c: (crops.count(c), len(crops) - crops[::-1].index(c)))
         if len(pattern) < period:
             continue
         if period > 1 and len(set(pattern.values())) == 1:

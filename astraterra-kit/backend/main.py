@@ -273,7 +273,7 @@ def analyze(req: AnalyzeRequest):
     # Bare-field calendar for the CURRENT rotation (first year), from the crop calendar.
     _, bare_now = year_kc(current[0])
     response["bare_field_calendar"] = {
-        "source": "Crop calendar + NASA POWER heavy-rain days (MODIS NDVI check coming)",
+        "source": "Crop calendar + NASA POWER heavy-rain days",
         "months": [
             {"month": m, "bare": m in bare_now, "ndvi_median": None, "heavy_rain_risk": rain_risk[m]}
             for m in range(1, 13)
