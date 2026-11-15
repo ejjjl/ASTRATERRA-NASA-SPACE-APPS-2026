@@ -1,0 +1,85 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='860' viewBox='0 0 1600 860'>
+<rect width='1600' height='860' fill='#06392f'/>
+<text x='150' y='58' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Real corn yield vs trend, Vernon County WI (USDA NASS)  ·  model water stress below</text>
+<line x1='150' y1='500.0' x2='1540' y2='500.0' stroke='#bcd3c8' stroke-opacity='0.18'/>
+<text x='136' y='506.0' font-family='Segoe UI, Arial, sans-serif' font-size='17' fill='#bcd3c8' font-weight='normal' text-anchor='end'>-20%</text>
+<line x1='150' y1='400.0' x2='1540' y2='400.0' stroke='#bcd3c8' stroke-opacity='0.18'/>
+<text x='136' y='406.0' font-family='Segoe UI, Arial, sans-serif' font-size='17' fill='#bcd3c8' font-weight='normal' text-anchor='end'>-10%</text>
+<line x1='150' y1='300.0' x2='1540' y2='300.0' stroke='#bcd3c8' stroke-opacity='0.6'/>
+<text x='136' y='306.0' font-family='Segoe UI, Arial, sans-serif' font-size='17' fill='#bcd3c8' font-weight='normal' text-anchor='end'>trend</text>
+<line x1='150' y1='200.0' x2='1540' y2='200.0' stroke='#bcd3c8' stroke-opacity='0.18'/>
+<text x='136' y='206.0' font-family='Segoe UI, Arial, sans-serif' font-size='17' fill='#bcd3c8' font-weight='normal' text-anchor='end'>+10%</text>
+<line x1='150' y1='100.0' x2='1540' y2='100.0' stroke='#bcd3c8' stroke-opacity='0.18'/>
+<text x='136' y='106.0' font-family='Segoe UI, Arial, sans-serif' font-size='17' fill='#bcd3c8' font-weight='normal' text-anchor='end'>+20%</text>
+<rect x='162.57619047619048' y='141.0' width='41.03809523809524' height='159.0' rx='3' fill='#3f9b6b'/>
+<circle cx='183.0952380952381' cy='650' r='6.25' fill='#f0a23a' fill-opacity='1'/>
+<text x='183.0952380952381' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'>2005</text>
+<rect x='228.76666666666668' y='227.0' width='41.03809523809524' height='73.0' rx='3' fill='#3f9b6b'/>
+<circle cx='249.2857142857143' cy='650' r='7.75' fill='#f0a23a' fill-opacity='1'/>
+<text x='249.2857142857143' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='294.95714285714286' y='300.0' width='41.03809523809524' height='139.0' rx='3' fill='#bcd3c8'/>
+<circle cx='315.4761904761905' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='315.4761904761905' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='361.147619047619' y='300.0' width='41.03809523809524' height='46.0' rx='3' fill='#bcd3c8'/>
+<circle cx='381.66666666666663' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='381.66666666666663' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='427.3380952380952' y='247.0' width='41.03809523809524' height='53.0' rx='3' fill='#3f9b6b'/>
+<circle cx='447.85714285714283' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='447.85714285714283' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='493.5285714285714' y='257.0' width='41.03809523809524' height='43.0' rx='3' fill='#3f9b6b'/>
+<circle cx='514.047619047619' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='514.047619047619' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'>2010</text>
+<rect x='559.7190476190476' y='297.0' width='41.03809523809524' height='3.0' rx='3' fill='#3f9b6b'/>
+<circle cx='580.2380952380952' cy='650' r='5.5' fill='#f0a23a' fill-opacity='1'/>
+<text x='580.2380952380952' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='625.9095238095238' y='300.0' width='41.03809523809524' height='172.0' rx='3' fill='#e0533f'/>
+<text x='672.9476190476189' y='468.0' font-family='Segoe UI, Arial, sans-serif' font-size='24' fill='#ffffff' font-weight='bold' text-anchor='start'>-17%</text>
+<circle cx='646.4285714285713' cy='650' r='25.0' fill='#e0533f' fill-opacity='1'/>
+<text x='646.4285714285713' y='617.0' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#ffffff' font-weight='bold' text-anchor='middle'>28%</text>
+<text x='646.4285714285713' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#f6c61a' font-weight='bold' text-anchor='middle'>2012</text>
+<rect x='692.1' y='300.0' width='41.03809523809524' height='106.0' rx='3' fill='#bcd3c8'/>
+<circle cx='712.6190476190476' cy='650' r='10.75' fill='#f0a23a' fill-opacity='1'/>
+<text x='712.6190476190476' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='758.2904761904762' y='283.0' width='41.03809523809524' height='17.0' rx='3' fill='#3f9b6b'/>
+<circle cx='778.8095238095237' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='778.8095238095237' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='824.4809523809524' y='300.0' width='41.03809523809524' height='33.0' rx='3' fill='#bcd3c8'/>
+<circle cx='845.0' cy='650' r='5.5' fill='#f0a23a' fill-opacity='1'/>
+<text x='845.0' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'>2015</text>
+<rect x='890.6714285714286' y='201.0' width='41.03809523809524' height='99.0' rx='3' fill='#3f9b6b'/>
+<circle cx='911.1904761904761' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='911.1904761904761' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='956.8619047619047' y='300.0' width='41.03809523809524' height='4.0' rx='3' fill='#bcd3c8'/>
+<circle cx='977.3809523809523' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='977.3809523809523' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1023.0523809523811' y='281.0' width='41.03809523809524' height='19.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1043.5714285714287' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1043.5714285714287' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1089.242857142857' y='300.0' width='41.03809523809524' height='46.0' rx='3' fill='#bcd3c8'/>
+<circle cx='1109.7619047619046' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1109.7619047619046' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1155.4333333333334' y='228.0' width='41.03809523809524' height='72.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1175.952380952381' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1175.952380952381' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'>2020</text>
+<rect x='1221.6238095238095' y='277.0' width='41.03809523809524' height='23.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1242.142857142857' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1242.142857142857' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1287.8142857142857' y='266.0' width='41.03809523809524' height='34.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1308.3333333333333' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1308.3333333333333' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1354.0047619047618' y='300.0' width='41.03809523809524' height='167.0' rx='3' fill='#e0533f'/>
+<text x='1401.042857142857' y='463.0' font-family='Segoe UI, Arial, sans-serif' font-size='24' fill='#ffffff' font-weight='bold' text-anchor='start'>-17%</text>
+<circle cx='1374.5238095238094' cy='650' r='16.75' fill='#e0533f' fill-opacity='1'/>
+<text x='1374.5238095238094' y='625.25' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#ffffff' font-weight='bold' text-anchor='middle'>17%</text>
+<text x='1374.5238095238094' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#f6c61a' font-weight='bold' text-anchor='middle'>2023</text>
+<rect x='1420.1952380952382' y='249.0' width='41.03809523809524' height='51.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1440.7142857142858' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1440.7142857142858' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'></text>
+<rect x='1486.3857142857144' y='232.0' width='41.03809523809524' height='68.0' rx='3' fill='#3f9b6b'/>
+<circle cx='1506.904761904762' cy='650' r='4.0' fill='#bcd3c8' fill-opacity='0.35'/>
+<text x='1506.904761904762' y='710' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='middle'>2025</text>
+<line x1='150' y1='535' x2='1540' y2='535' stroke='#bcd3c8' stroke-opacity='0.3'/>
+<text x='150' y='562' font-family='Segoe UI, Arial, sans-serif' font-size='20' fill='#bcd3c8' font-weight='normal' text-anchor='start'>Model water stress (NASA weather only): bigger, redder dot = more stress</text>
+<text x='136' y='656' font-family='Segoe UI, Arial, sans-serif' font-size='18' fill='#bcd3c8' font-weight='normal' text-anchor='end'>model</text>
+<text x='800.0' y='810' font-family='Segoe UI, Arial, sans-serif' font-size='24' fill='#f6c61a' font-weight='bold' text-anchor='middle'>Using only NASA weather, the model&#x27;s 2 worst years (2012, 2023) are the 2 lowest yields on record.</text>
+</svg>
