@@ -17,6 +17,8 @@ Required for submission. Add a row whenever you use a new tool, dataset, or AI a
 | SRTM 30 m via OpenTopoData | NASA (data), OpenTopoData (API) | Field elevation, slope (erosion zones), low spots (frost pockets) | 81 points in 1 call per field, cached. Public API limits respected: max 100 points/call, 1 call/sec, 1000 calls/day |
 | SoilGrids 2.0 REST API | ISRIC | Clay, sand, organic carbon, pH (0-100 cm average) | Not NASA; farmer can override. CC-BY 4.0, credited in app + README. Fair-use API, cached so each field is queried once |
 | Cropland Data Layer (CDL) via CropScape | USDA NASS | Real crop history of the field 2008-2025 (30 m), auto-detects the current rotation, flags pins on towns/forest | Public domain, US only, cached per field |
+| Quick Stats county yields | USDA NASS | Validation: corn/soybean yields 2005-2025, Vernon County WI, compared with the model's water stress (backend/validate.py) | Public domain, CSV downloaded from quickstats.nass.usda.gov |
+| Census block lookup API | FCC | Finding the demo farm's county (Vernon County, WI) for the validation | Public US government API, one lookup |
 | FAOSTAT | FAO | Country crop and price context | Stretch goal |
 | FAO-56 / FAO-33 | FAO | Hargreaves ET0 (eq. 52), crop coefficients Kc (Table 12), 50% stress line | Methodology |
 | Saxton & Rawls (2006), SSSAJ 70:1569 | Published paper | Soil texture -> plant-available water per metre | Methodology |

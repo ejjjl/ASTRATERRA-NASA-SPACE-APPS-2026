@@ -1,0 +1,81 @@
+/* Farm Journal: field-notebook look that matches the app's cream + green palette. */
+.cj { --paper: #fffdf6; --rule: #e7e0cc; --margin: #e6b8a8; --ink-soft: #5a665d; --good: #2f6b45; --soso: #b7791f; --fail: #b03a2e; }
+.cj-intro { color: var(--ink-soft); margin: 0 0 16px; max-width: 70ch; }
+.cj-h { font-family: Georgia, "Times New Roman", serif; font-size: 1.1rem; color: #1f4d33; margin: 22px 0 10px; }
+.cj-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+@media (max-width: 860px) { .cj-layout { grid-template-columns: 1fr; } }
+
+/* ---- Clue sticky notes ---- */
+.cj-clues { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.cj-note { background: #fff6b8; padding: 14px 14px 12px; border-radius: 2px; box-shadow: 0 6px 14px rgba(0,0,0,.10);
+  transform: rotate(var(--tilt, 0deg)); position: relative; }
+.cj-note::before { content: ""; position: absolute; top: -8px; left: 50%; width: 60px; height: 16px; margin-left: -30px;
+  background: rgba(255,255,255,.55); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.cj-note.what_works { background: #dff1d8; }
+.cj-note.keep_logging { background: #eef1f5; }
+.cj-note h4 { margin: 4px 0 6px; font-size: .98rem; }
+.cj-note p { margin: 0 0 8px; font-size: .9rem; line-height: 1.45; }
+.cj-ev { list-style: none; padding: 6px 0 0; margin: 0; border-top: 1px dashed rgba(0,0,0,.18); font-size: .78rem; }
+.cj-ev span { color: var(--ink-soft); }
+
+/* ---- Season calendar ---- */
+.cj-cal { overflow-x: auto; border: 1px solid var(--line, #d9d4c5); border-radius: 12px; padding: 8px; background: var(--paper); }
+.cj-cal-row { display: grid; grid-template-columns: 92px repeat(12, minmax(28px, 1fr)); gap: 3px; align-items: center; min-width: 520px; }
+.cj-cal-row + .cj-cal-row { margin-top: 3px; }
+.cj-cal-row.head span { font-size: .72rem; color: var(--ink-soft); text-align: center; }
+.cj-cal-label { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: .85rem; }
+.cj-cal-cell { height: 28px; border-radius: 6px; background: #efe9da; display: flex; align-items: center; justify-content: center; font-size: .8rem; }
+.cj-cal-cell.on { background: #b9d9a5; }
+.cj-cal-cell.on.corn { background: #f2d77a; }
+.cj-cal-cell.on.soybean { background: #c9d58f; }
+.cj-cal-cell.on.wheat_winter, .cj-cal-cell.on.oats { background: #ead39b; }
+.cj-cal-cell.on.sorghum { background: #d9a17f; }
+.cj-cal-cell.on.alfalfa { background: #c9b6e6; }
+.cj-cal-cell.on.red_clover { background: #efb2c0; }
+.cj-cal-cell.on.cereal_rye { background: #c3d1b4; }
+
+/* ---- Notebook pages ---- */
+.cj-pages { display: grid; gap: 12px; }
+.cj-page { display: flex; gap: 14px; padding: 14px 16px 12px 28px; border-radius: 6px; position: relative;
+  background: repeating-linear-gradient(var(--paper) 0 27px, var(--rule) 27px 28px);
+  border: 1px solid var(--rule); box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.cj-page::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--margin); }
+.cj-page.ghost { opacity: .78; background: var(--paper); border-style: dashed; }
+.cj-art { flex: none; }
+.cj-page-body { flex: 1; min-width: 0; }
+.cj-page-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.cj-year { font-family: Georgia, serif; font-size: 1.4rem; font-weight: 700; color: #1f4d33; }
+.cj-crop { font-weight: 600; }
+.cj-source { font-size: .78rem; color: var(--ink-soft); background: #eef1f5; border-radius: 999px; padding: 2px 8px; }
+.cj-dates { margin: 4px 0; font-size: .85rem; color: var(--ink-soft); }
+.cj-notes { margin: 6px 0 2px; font-family: Georgia, serif; font-style: italic; line-height: 28px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cj-actions { display: flex; gap: 14px; }
+
+/* ---- Outcome stamps ---- */
+.cj-stamp { display: inline-block; font-weight: 800; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
+  padding: 3px 9px; border: 2px solid currentColor; border-radius: 6px; transform: rotate(-4deg); }
+.cj-stamp.good { color: var(--good); }
+.cj-stamp.so_so { color: var(--soso); }
+.cj-stamp.failed { color: var(--fail); }
+
+/* ---- Entry form ---- */
+.cj-form { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 4px 16px 16px; position: sticky; top: 12px; }
+.cj-form label { display: block; font-weight: 600; font-size: .9rem; margin: 10px 0; }
+.cj-form input, .cj-form select, .cj-form textarea { display: block; width: 100%; margin-top: 4px; padding: 10px; font: inherit;
+  font-weight: 400; border: 1px solid var(--line, #d9d4c5); border-radius: 8px; background: #fff; min-height: 44px; }
+.cj-form textarea { resize: vertical; font-family: Georgia, serif; }
+.cj-form-art { display: flex; justify-content: center; }
+.cj-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cj-outcomes { border: 0; padding: 0; margin: 10px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.cj-outcomes legend { font-weight: 600; font-size: .9rem; margin-bottom: 6px; }
+.cj-stamp-btn { min-height: 44px; padding: 6px 12px; border-radius: 8px; border: 2px dashed currentColor; background: #fff;
+  font-weight: 700; cursor: pointer; }
+.cj-stamp-btn.good { color: var(--good); }
+.cj-stamp-btn.so_so { color: var(--soso); }
+.cj-stamp-btn.failed { color: var(--fail); }
+.cj-stamp-btn.on { border-style: solid; color: #fff; }
+.cj-stamp-btn.good.on { background: var(--good); border-color: var(--good); }
+.cj-stamp-btn.so_so.on { background: var(--soso); border-color: var(--soso); }
+.cj-stamp-btn.failed.on { background: var(--fail); border-color: var(--fail); }
+
+@media print { .cj-form, .cj-actions, .cj-page.ghost { display: none; } .cj-layout { grid-template-columns: 1fr; } }

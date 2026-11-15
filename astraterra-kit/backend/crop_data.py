@@ -101,6 +101,9 @@ def load_crops():
         kc = monthly_kc(row) if has_full_curve(row) and not perennial else None
         root = float(row["rooting_depth_m"]) if pd.notna(row["rooting_depth_m"]) else None
         crops[crop_id] = {
+            "name": row["common_name"],
+            "ph_min": float(row["ph_min"]) if pd.notna(row["ph_min"]) else None,
+            "ph_max": float(row["ph_max"]) if pd.notna(row["ph_max"]) else None,
             "kc_monthly": kc,
             "root_depth_m": root,
             "family": row["plant_family"],

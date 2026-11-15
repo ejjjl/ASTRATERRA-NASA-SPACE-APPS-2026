@@ -31,6 +31,7 @@ from cdl import crop_history, detect_rotation, is_cropland
 from water_balance import simulate_rotation
 from scoring import score_rotation
 from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
+from journal import journal_clues
 
 app = FastAPI(title="ASTRATERRA API")
 
@@ -252,6 +253,45 @@ def analyze(req: AnalyzeRequest):
     response["rotations"] = rotations_out
     response["recommendation"] = recommendation(rotations_out, req.priorities, req.constraints)
     return response
+
+
+# ---------- 4. Farm Journal clues ----------
+class JournalEntry(BaseModel):
+    year: int
+    crop: str
+    outcome: Optional[str] = None      # "good" | "so_so" | "failed" | None (USDA record, no verdict)
+    notes: str = ""
+
+
+class JournalRequest(BaseModel):
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    entries: list[JournalEntry] = []
+    soil_overrides: dict[str, Optional[float]] = {}
+
+
+DRY_SUMMERS = 3   # how many of the driest summers count as "dry years"
+
+
+@app.post("/api/journal-clues")
+def journal_clues_endpoint(req: JournalRequest):
+    """Patterns in the farmer's journal, checked against this field's soil and NASA weather."""
+    lat = req.lat if req.lat is not None else DEFAULT_LAT
+    lon = req.lon if req.lon is not None else DEFAULT_LON
+
+    # Soil pH: the farmer's own value if given, else SoilGrids
+    soil_values, soil_source = apply_overrides(get_soil(lat, lon), req.soil_overrides)
+    ph = soil_values.get("ph")
+    ph_source = "Your soil test" if soil_source.get("ph") == "farmer_override" else "SoilGrids"
+
+    # Dry years: the summers (Jun-Aug) with the lowest root-zone soil moisture, NASA POWER (cached)
+    monthly = monthly_by_year(get_daily(lat, lon))
+    summer = monthly[monthly.index.get_level_values("month").isin([6, 7, 8])]
+    summer_moisture = summer.groupby("year")["soil_moisture_root"].mean()
+    dry_years = [int(y) for y in summer_moisture.nsmallest(DRY_SUMMERS).index]
+
+    entries = [e.model_dump() for e in req.entries]
+    return {"clues": journal_clues(entries, ph, ph_source, dry_years), "dry_years": sorted(dry_years), "soil_ph": ph}
 
 
 @app.get("/api/health")
