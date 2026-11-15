@@ -2,36 +2,12 @@ import { AppProvider, useApp } from "./core/AppState.jsx";
 import Flow from "./core/Flow.jsx";
 import "./app-ui.css";
 
-const FETCH_MSG = "Fetching 21 years of NASA data and soil information for this spot...";
-const FETCH_SUB = "The first time at a new location takes 10-30 seconds. After that it loads instantly.";
-
-function Busy() {
-  return (
-    <div className="busy" role="status" aria-live="polite">
-      <span className="spin" aria-hidden="true" />
-      <div>
-        <strong>{FETCH_MSG}</strong>
-        <div className="busy-sub">{FETCH_SUB}</div>
-      </div>
-    </div>
-  );
-}
-
+// Loading and error banners live in core/Flow.jsx so they never appear on the welcome screen.
 function Shell() {
-  const { data, error, loading, slow } = useApp();
+  const { data } = useApp();
   return (
     <>
-      {slow && <div className="wrap no-print"><Busy /></div>}
-      {error && data && !loading && (
-        <div className="wrap no-print">
-          <div className="err-banner">Could not update for this location: {error}. Showing the last result.</div>
-        </div>
-      )}
-
-      <div className={slow ? "dim" : ""}>
-        <Flow />
-      </div>
-
+      <Flow />
       {data && (
         <footer className="wrap">
           {(data.disclaimers || []).map((d, i) => (

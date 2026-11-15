@@ -8,27 +8,57 @@
         {
           "value": "mostly_sand",
           "label": "Mostly sand",
-          "interpretation": "Coarse-textured soil; water may drain quickly and nutrient retention may be lower."
+          "interpretation": "Coarse-textured soil; water may drain quickly and nutrient retention may be lower.",
+          "maps_to": {
+            "sand_pct": 70,
+            "clay_pct": 10,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "mostly_silt",
           "label": "Mostly silt",
-          "interpretation": "Medium-textured soil; confirm drainage and water-holding conditions."
+          "interpretation": "Medium-textured soil; confirm drainage and water-holding conditions.",
+          "maps_to": {
+            "sand_pct": 20,
+            "clay_pct": 20,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "mostly_clay",
           "label": "Mostly clay",
-          "interpretation": "Fine-textured soil; infiltration may be slower and compaction risk may be higher."
+          "interpretation": "Fine-textured soil; infiltration may be slower and compaction risk may be higher.",
+          "maps_to": {
+            "sand_pct": 20,
+            "clay_pct": 60,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "mixed",
           "label": "Layers look fairly balanced",
-          "interpretation": "Possibly loam or mixed texture; laboratory texture testing is more reliable."
+          "interpretation": "Possibly loam or mixed texture; laboratory texture testing is more reliable.",
+          "maps_to": {
+            "sand_pct": 40,
+            "clay_pct": 20,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "unknown",
           "label": "I don't know",
-          "interpretation": "No texture-based adjustment should be made."
+          "interpretation": "No texture-based adjustment should be made.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         }
       ]
     },
@@ -40,22 +70,46 @@
         {
           "value": "strong_fizz",
           "label": "Strong fizzing",
-          "interpretation": "Possible carbonates; this does not establish soil pH."
+          "interpretation": "Possible carbonates; this does not establish soil pH.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "slight_fizz",
           "label": "Slight fizzing",
-          "interpretation": "Possible low carbonate content; laboratory confirmation is needed."
+          "interpretation": "Possible low carbonate content; laboratory confirmation is needed.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "no_fizz",
           "label": "No visible fizzing",
-          "interpretation": "No obvious carbonate reaction; carbonates may still be present."
+          "interpretation": "No obvious carbonate reaction; carbonates may still be present.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "unknown",
           "label": "I don't know",
-          "interpretation": "Do not infer carbonate status."
+          "interpretation": "Do not infer carbonate status.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         }
       ]
     },
@@ -67,22 +121,46 @@
         {
           "value": "fast",
           "label": "Drains quickly",
-          "interpretation": "Possible rapid drainage and lower water retention."
+          "interpretation": "Possible rapid drainage and lower water retention.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "moderate",
           "label": "Drains gradually",
-          "interpretation": "Possible moderate drainage."
+          "interpretation": "Possible moderate drainage.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "slow",
           "label": "Water remains for a long time",
-          "interpretation": "Possible poor drainage; investigate compaction or a high water table."
+          "interpretation": "Possible poor drainage; investigate compaction or a high water table.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "unknown",
           "label": "I don't know",
-          "interpretation": "Do not make a drainage-based adjustment."
+          "interpretation": "Do not make a drainage-based adjustment.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         }
       ]
     },
@@ -94,22 +172,46 @@
         {
           "value": "many",
           "label": "Several earthworms",
-          "interpretation": "Earthworms are present; this can indicate biological activity but is not a complete soil-health measure."
+          "interpretation": "Earthworms are present; this can indicate biological activity but is not a complete soil-health measure.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "few",
           "label": "One or two earthworms",
-          "interpretation": "Some biological activity is present; results vary with season and moisture."
+          "interpretation": "Some biological activity is present; results vary with season and moisture.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "none",
           "label": "None observed",
-          "interpretation": "No earthworms were observed; this alone does not prove poor soil health."
+          "interpretation": "No earthworms were observed; this alone does not prove poor soil health.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         },
         {
           "value": "unknown",
           "label": "I don't know",
-          "interpretation": "Do not infer biological activity."
+          "interpretation": "Do not infer biological activity.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         }
       ]
     },
@@ -121,27 +223,57 @@
         {
           "value": "acidic",
           "label": "Below 6.0",
-          "interpretation": "Acidic soil; some crops may face nutrient availability limitations."
+          "interpretation": "Acidic soil; some crops may face nutrient availability limitations.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": 5.5
+          }
         },
         {
           "value": "slightly_acidic",
           "label": "6.0–6.5",
-          "interpretation": "Slightly acidic soil; suitability depends on the crop."
+          "interpretation": "Slightly acidic soil; suitability depends on the crop.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": 6.25
+          }
         },
         {
           "value": "near_neutral",
           "label": "6.6–7.3",
-          "interpretation": "Near-neutral soil; generally suitable for many crops."
+          "interpretation": "Near-neutral soil; generally suitable for many crops.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": 6.95
+          }
         },
         {
           "value": "alkaline",
           "label": "Above 7.3",
-          "interpretation": "Alkaline soil; some nutrients may become less available."
+          "interpretation": "Alkaline soil; some nutrients may become less available.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": 7.8
+          }
         },
         {
           "value": "unknown",
           "label": "I don't know",
-          "interpretation": "Do not make a pH-based adjustment."
+          "interpretation": "Do not make a pH-based adjustment.",
+          "maps_to": {
+            "sand_pct": null,
+            "clay_pct": null,
+            "organic_carbon_pct": null,
+            "ph": null
+          }
         }
       ]
     }
