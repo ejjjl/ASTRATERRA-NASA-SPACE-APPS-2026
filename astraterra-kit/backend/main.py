@@ -37,6 +37,26 @@ from explain import confidence, field_facts, fit_breakdown, recommendation, rota
 from journal import journal_clues
 from trends import climate_trends
 
+# Brandon's k-means year types (backend/climate_analysis.py). Until that file is pushed,
+# the API keeps working and simply leaves year types empty.
+try:
+    from climate_analysis import year_types as _year_types
+except ImportError:
+    _year_types = None
+
+YEAR_TYPE_LABELS = {"hot_dry": "Hot/dry", "normal": "Normal", "wet_cool": "Wet/cool"}
+
+
+def year_type_summary(types):
+    """{2012: "hot_dry", ...} -> contract format [{label, count, years, caveat}]"""
+    groups = {}
+    for year, t in sorted(types.items()):
+        groups.setdefault(t, []).append(int(year))
+    return [{"label": YEAR_TYPE_LABELS.get(t, str(t).replace("_", " ").capitalize()), "type": t,
+             "count": len(years), "years": years,
+             "caveat": f"Small sample ({len(types)} years); groups found by k-means clustering of summer weather."}
+            for t, years in groups.items()]
+
 app = FastAPI(title="ASTRATERRA API")
 log = logging.getLogger("uvicorn.error")      # prints in the same console as uvicorn
 
@@ -221,6 +241,17 @@ def analyze(req: AnalyzeRequest):
     by_year["season_gdd"] = season.groupby("year")["gdd"].sum()
     # Soil moisture vs normal: + = wetter summer than the 21-year average, - = drier
     by_year["soil_moisture_vs_normal"] = by_year["summer_soil_moisture_root"] - by_year["summer_soil_moisture_root"].mean()
+    # Year types: Brandon's k-means groups each year by its summer weather (empty until pushed)
+    types = {}
+    if _year_types is not None:
+        try:
+            types = {int(y): t for y, t in _year_types(by_year).items()}
+        except Exception as err:                      # a bug there must not break the whole analysis
+            log.warning("year_types failed: %s", err)
+    response["climate"]["year_types"] = year_type_summary(types)
+    if types:                                          # real year types -> no longer a placeholder
+        response["_placeholders"] = [p for p in response["_placeholders"] if "year_type" not in p]
+
     response["climate"]["yearly"] = [
         {
             "year": int(year),
@@ -230,7 +261,7 @@ def analyze(req: AnalyzeRequest):
             "summer_soil_moisture_root": round(float(r.summer_soil_moisture_root), 2),
             "soil_moisture_vs_normal": round(float(r.soil_moisture_vs_normal), 3),
             "season_gdd": round(float(r.season_gdd)),
-            "year_type": None,  # Brandon's clustering fills this in
+            "year_type": types.get(int(year)),   # hot_dry / normal / wet_cool (Brandon's k-means)
         }
         for year, r in by_year.iterrows()
     ]
