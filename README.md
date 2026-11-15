@@ -23,7 +23,7 @@ In southwestern Wisconsin's Driftless Area the land is steep: bare soil on slope
 | Feature | What the farmer sees |
 |---|---|
 | **21-year replay** | Every rotation is run through each year 2005-2025 with real NASA weather: OK (under 15% water shortfall), stress (15-34%), failed (35%+). Click a year to see the soil water run dry month by month. |
-| **Field risk map** | Erosion-prone slopes and frost-prone low spots, mapped from NASA SRTM elevation on a satellite view. |
+| **Field risk map** | Erosion-prone slopes and low spots where cold air can collect (a terrain-based frost hint, not a measurement), mapped from NASA SRTM elevation on a satellite view. |
 | **Explained recommendation** | The best fit for the farmer's priorities, with the reasons (in numbers), the trade-offs, and a breakdown of what the fit score is made of. |
 | **Rotation cards** | Current rotation + 4 alternatives (cover crop, small grain + legume, perennial forage, drought-tolerant sorghum), each with why / evidence / benefits / data gaps / risks for local review / sources / confidence. |
 | **Field analysis** | Rain vs. crop water demand by month, frost dates, heat days, heavy-rain days, sunshine, growing degree days, soil moisture vs. normal. |

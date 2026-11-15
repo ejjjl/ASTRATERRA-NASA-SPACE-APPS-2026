@@ -26,7 +26,7 @@ def text(x, y, s, size=20, color=WHITE, weight="normal", anchor="start"):
 
 
 def pipeline():
-    W, H = 1600, 640
+    W, H = 1600, 760
     boxes = [
         ("1  DATA", [("NASA POWER", True), ("21 years of daily weather", False), ("rain · heat · sun · soil moisture", False), ("", False),
                      ("NASA SRTM", True), ("30 m elevation: slopes", False), ("", False),
@@ -36,12 +36,13 @@ def pipeline():
                           ("daily → monthly, per field", True)]),
         ("3  MODEL", [("Water balance", True), ("FAO-56 crop demand", False), ("+ soil water bucket", False), ("", False),
                       ("21-year replay", True), ("every rotation, 2005-2025", False), ("", False),
-                      ("Rule-based scores", True), ("water · erosion · nitrogen", False), ("soil · pests · forage", False)]),
+                      ("Rule-based scores", True), ("water · erosion · nitrogen", False), ("soil · pests · forage", False), ("", False),
+                      ("Year types + trends", True), ("k-means: hot/dry, normal, wet", False), ("Mann-Kendall trend tests", False)]),
         ("4  DECISION", [("Ranked recommendation", True), ("for the farmer's priorities", False), ("", False),
                          ("Reasons with numbers", True), ("Evidence + sources", True), ("Risks for local review", True),
                          ("Data gaps", True), ("", False), ("Farm Journal clues", True)]),
     ]
-    bw, gap, top, bh = 360, 40, 30, 520
+    bw, gap, top, bh = 360, 40, 30, 640
     x0 = (W - (4 * bw + 3 * gap)) / 2
     out = [f"<svg xmlns='http://www.w3.org/2000/svg' width='{W}' height='{H}' viewBox='0 0 {W} {H}'>",
            f"<rect width='{W}' height='{H}' fill='{BG}'/>",
