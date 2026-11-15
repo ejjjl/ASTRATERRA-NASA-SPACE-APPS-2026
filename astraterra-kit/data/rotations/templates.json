@@ -1,3 +1,4 @@
+
 {
   "_schema": {
     "about": "Rotation templates: alternatives built from the farmer's CURRENT rotation. Read by the backend, replayed through 2005-2025 and scored. Crop timing lives in data/crops/crops.csv; bare months are computed by the backend, not entered here.",
@@ -18,62 +19,198 @@
       "id": "alt_cover",
       "name": "{current} + cereal rye cover",
       "idea": "cover_crop",
-      "steps": [{"use_current": true, "cover_crop": "cereal_rye"}],
+      "steps": [
+        {
+          "use_current": true,
+          "cover_crop": "cereal_rye"
+        }
+      ],
       "requires": [],
-      "market_requirements": [],
-      "why": "",
-      "benefits": [],
-      "risks_for_local_review": [],
-      "data_gaps": [],
-      "sources": []
+      "market_requirements": "No separate grain market is required; the farmer needs access to cereal rye seed and a suitable seeding and termination method.",
+      "why": "Adding cereal rye as a winter cover crop keeps living roots and protective residue on the field between cash crops.",
+      "benefits": [
+        "Can reduce soil erosion by maintaining ground cover.",
+        "Can capture residual nutrients that might otherwise be lost during the off-season.",
+        "Can suppress some weeds and increase the amount of plant residue returned to the soil.",
+        "Can be added without replacing the farmer's existing cash-crop sequence."
+      ],
+      "risks_for_local_review": [
+        "Cereal rye must be established early enough after harvest to produce useful growth before winter.",
+        "Terminate rye at least 10 days before planting corn; Iowa State commonly recommends a 10-14 day interval.",
+        "Late termination can increase competition for water and nitrogen and may increase corn seedling disease risk.",
+        "Check herbicide choice, application timing, weather, and crop-insurance requirements locally."
+      ],
+      "data_gaps": [
+        "The model does not estimate actual rye biomass or nitrogen immobilization.",
+        "The model does not determine the best termination date from field conditions.",
+        "Cover-crop establishment success depends on harvest date, rainfall, and seeding method."
+      ],
+      "sources": [
+        {
+          "title": "Iowa State Extension - Terminating cover crops ahead of corn",
+          "url": "https://crops.extension.iastate.edu/post/terminating-cover-crops-ahead-corn"
+        },
+        {
+          "title": "Iowa State Extension - Cereal Rye Cover Crops, Allelopathy and Corn",
+          "url": "https://crops.extension.iastate.edu/cropnews/2014/04/cereal-rye-cover-crops-allelopathy-and-corn"
+        },
+        {
+          "title": "Iowa State Extension - Iowa Cover Crop Recipe: Post Corn, Going to Soybean",
+          "url": "https://store.extension.iastate.edu/product/15548.pdf"
+        }
+      ]
     },
     {
       "id": "alt_small_grain",
       "name": "{current} / Winter wheat + red clover",
       "idea": "small_grain",
       "steps": [
-        {"use_current": true},
-        {"main_crop": "wheat_winter", "cover_crop": "red_clover", "years": 1}
+        {
+          "use_current": true
+        },
+        {
+          "main_crop": "wheat_winter",
+          "cover_crop": "red_clover",
+          "years": 1
+        }
       ],
       "requires": [],
-      "market_requirements": [],
-      "why": "",
-      "benefits": [],
-      "risks_for_local_review": [],
-      "data_gaps": [],
-      "sources": []
+      "market_requirements": "A local buyer or other reliable use for winter wheat grain is needed; confirm access to suitable planting and harvesting equipment.",
+      "why": "Introducing winter wheat with red clover adds a small grain and a legume phase to diversify the conventional corn-soybean sequence.",
+      "benefits": [
+        "Adds a different crop family and growing season to the rotation.",
+        "Can provide additional periods of soil cover and living roots.",
+        "Red clover can contribute biologically fixed nitrogen when successfully established.",
+        "A different harvest window can spread fieldwork across the season.",
+        "Can create an opportunity for another crop or cover crop after wheat harvest."
+      ],
+      "risks_for_local_review": [
+        "Confirm that winter wheat is suitable for the field's location, variety, planting date, and winter conditions.",
+        "Red clover establishment can be poor if seeding conditions or moisture are unsuitable.",
+        "Confirm local grain buyers, expected prices, storage, and harvesting arrangements before planting.",
+        "Check wheat disease, weed, and residue-management risks with a local agronomist."
+      ],
+      "data_gaps": [
+        "The model does not predict wheat or red clover yield or farm profitability.",
+        "The model does not estimate the nitrogen contribution from red clover.",
+        "Actual winter survival and red clover establishment depend on local weather and management."
+      ],
+      "sources": [
+        {
+          "title": "USDA NRCS - Whole Farm Conservation Best Practices Manual",
+          "url": "https://www.nrcs.usda.gov/sites/default/files/2024-10/WholeFarmConsPractice_CLG105.pdf"
+        },
+        {
+          "title": "USDA NRCS and Iowa State Extension - Winter Wheat Cover Crop Fact Sheet for Iowa",
+          "url": "https://www.nrcs.usda.gov/sites/default/files/2024-06/Winter%20Wheat%20Cover%20Crop%20Fact%20Sheet.pdf"
+        },
+        {
+          "title": "Practical Farmers of Iowa - Best Management Practices for Winter Cereal Grains",
+          "url": "https://practicalfarmers.org/wp-content/uploads/2018/10/PM2025.pdf"
+        }
+      ]
     },
     {
       "id": "alt_perennial",
       "name": "{current} / 2 years alfalfa",
       "idea": "perennial",
       "steps": [
-        {"use_current": true},
-        {"main_crop": "alfalfa", "cover_crop": null, "years": 2}
+        {
+          "use_current": true
+        },
+        {
+          "main_crop": "alfalfa",
+          "cover_crop": null,
+          "years": 2
+        }
       ],
-      "requires": ["hay_equipment"],
-      "market_requirements": [],
-      "why": "",
-      "benefits": [],
-      "risks_for_local_review": [],
-      "data_gaps": [],
-      "sources": []
+      "requires": [
+        "hay_equipment"
+      ],
+      "market_requirements": "A reliable local hay buyer, livestock operation, or custom hay-harvesting service is needed.",
+      "why": "Adding a two-year alfalfa phase introduces a perennial legume with continuous soil cover and potential nitrogen benefits for following crops.",
+      "benefits": [
+        "Perennial ground cover can reduce erosion during the alfalfa phase.",
+        "Alfalfa fixes atmospheric nitrogen through its association with soil bacteria.",
+        "Alfalfa can improve soil organic matter and reduce nitrate leaching.",
+        "The crop following a successfully managed alfalfa stand may benefit from residual nitrogen.",
+        "A hay phase diversifies farm production beyond annual grain crops."
+      ],
+      "risks_for_local_review": [
+        "Confirm that the field has suitable drainage, soil pH, and conditions for establishing alfalfa.",
+        "A successful stand requires appropriate establishment, cutting, and weed management.",
+        "The farmer needs hay harvesting equipment or access to a reliable custom operator.",
+        "Check local hay demand, storage capacity, and transport costs.",
+        "Alfalfa termination must be managed carefully to prevent regrowth and competition with the next crop."
+      ],
+      "data_gaps": [
+        "The model does not estimate hay yield, quality, or market price.",
+        "The model does not calculate the field-specific nitrogen credit after alfalfa.",
+        "The model does not simulate stand establishment, cutting schedules, or stand persistence."
+      ],
+      "sources": [
+        {
+          "title": "Clean Water Iowa - Extended Crop Rotation",
+          "url": "https://www.cleanwateriowa.org/extended-crop-rotation"
+        },
+        {
+          "title": "USDA NRCS - Whole Farm Conservation Best Practices Manual",
+          "url": "https://www.nrcs.usda.gov/sites/default/files/2024-10/WholeFarmConsPractice_CLG105.pdf"
+        },
+        {
+          "title": "University of Minnesota Extension - Managing the Rotation from Alfalfa to Corn",
+          "url": "https://extension.umn.edu/agriculture/crop-production/corn/managing-rotation-alfalfa-corn"
+        }
+      ]
     },
     {
       "id": "alt_drought",
       "name": "Sorghum / Soybean",
       "idea": "drought_tolerant",
       "steps": [
-        {"main_crop": "sorghum", "cover_crop": null, "years": 1},
-        {"main_crop": "soybean", "cover_crop": null, "years": 1}
+        {
+          "main_crop": "sorghum",
+          "cover_crop": null,
+          "years": 1
+        },
+        {
+          "main_crop": "soybean",
+          "cover_crop": null,
+          "years": 1
+        }
       ],
       "requires": [],
-      "market_requirements": [],
-      "why": "",
-      "benefits": [],
-      "risks_for_local_review": [],
-      "data_gaps": [],
-      "sources": []
+      "market_requirements": "Confirm a local grain buyer, suitable seed availability, and harvesting arrangements for sorghum before recommending this rotation.",
+      "why": "Replacing a corn phase with sorghum introduces a warm-season grain that can be a useful alternative where water availability limits corn production.",
+      "benefits": [
+        "Sorghum can maintain grain production under some moisture-limited conditions where corn performance declines.",
+        "Introduces a different crop species into the rotation.",
+        "Can diversify production and reduce dependence on a corn-only summer grain phase.",
+        "Soybean provides a following legume crop in the sequence."
+      ],
+      "risks_for_local_review": [
+        "Sorghum is not drought-proof and can still use substantial soil moisture.",
+        "Check local growing-season length, planting temperature, maturity, and frost risk.",
+        "Confirm that a suitable sorghum market and harvesting infrastructure exist.",
+        "Sorghum residue can temporarily tie up nitrogen during decomposition.",
+        "Check whether the sequence fits local weed, pest, and disease management."
+      ],
+      "data_gaps": [
+        "The model does not establish that sorghum is economically viable for every Iowa farm.",
+        "The model does not predict sorghum grain yield, harvest moisture, or local market price.",
+        "Sorghum water-use response depends on variety, soil, weather, and management.",
+        "The rotation comparison should not be interpreted as a guarantee of improved drought performance."
+      ],
+      "sources": [
+        {
+          "title": "University of Wisconsin Extension - Sorghum: Culture and Management",
+          "url": "https://corn.agronomy.wisc.edu/Crops/Sorghum/Default.aspx"
+        },
+        {
+          "title": "Utah State University Extension - Drought-Tolerant Options for Southwest Agriculture",
+          "url": "https://extension.usu.edu/drought/research/drought-tolerant-options-for-southwest-agriculture-grasses-grains-and-legumes"
+        }
+      ]
     }
   ]
 }

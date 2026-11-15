@@ -1,0 +1,149 @@
+{
+  "tests": [
+    {
+      "id": "soil_texture",
+      "name": "Soil texture (jar test)",
+      "question": "After mixing soil with water in a clear jar and letting it settle, which layer appears largest?",
+      "options": [
+        {
+          "value": "mostly_sand",
+          "label": "Mostly sand",
+          "interpretation": "Coarse-textured soil; water may drain quickly and nutrient retention may be lower."
+        },
+        {
+          "value": "mostly_silt",
+          "label": "Mostly silt",
+          "interpretation": "Medium-textured soil; confirm drainage and water-holding conditions."
+        },
+        {
+          "value": "mostly_clay",
+          "label": "Mostly clay",
+          "interpretation": "Fine-textured soil; infiltration may be slower and compaction risk may be higher."
+        },
+        {
+          "value": "mixed",
+          "label": "Layers look fairly balanced",
+          "interpretation": "Possibly loam or mixed texture; laboratory texture testing is more reliable."
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know",
+          "interpretation": "No texture-based adjustment should be made."
+        }
+      ]
+    },
+    {
+      "id": "carbonate_test",
+      "name": "Carbonate screening (vinegar test)",
+      "question": "When vinegar is added to a small dry soil sample, what happens?",
+      "options": [
+        {
+          "value": "strong_fizz",
+          "label": "Strong fizzing",
+          "interpretation": "Possible carbonates; this does not establish soil pH."
+        },
+        {
+          "value": "slight_fizz",
+          "label": "Slight fizzing",
+          "interpretation": "Possible low carbonate content; laboratory confirmation is needed."
+        },
+        {
+          "value": "no_fizz",
+          "label": "No visible fizzing",
+          "interpretation": "No obvious carbonate reaction; carbonates may still be present."
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know",
+          "interpretation": "Do not infer carbonate status."
+        }
+      ]
+    },
+    {
+      "id": "drainage_test",
+      "name": "Water drainage",
+      "question": "After water is poured into a small test hole in moist soil, how does it drain?",
+      "options": [
+        {
+          "value": "fast",
+          "label": "Drains quickly",
+          "interpretation": "Possible rapid drainage and lower water retention."
+        },
+        {
+          "value": "moderate",
+          "label": "Drains gradually",
+          "interpretation": "Possible moderate drainage."
+        },
+        {
+          "value": "slow",
+          "label": "Water remains for a long time",
+          "interpretation": "Possible poor drainage; investigate compaction or a high water table."
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know",
+          "interpretation": "Do not make a drainage-based adjustment."
+        }
+      ]
+    },
+    {
+      "id": "earthworm_observation",
+      "name": "Earthworm observation",
+      "question": "When examining a small area of moist soil, how many earthworms do you observe?",
+      "options": [
+        {
+          "value": "many",
+          "label": "Several earthworms",
+          "interpretation": "Earthworms are present; this can indicate biological activity but is not a complete soil-health measure."
+        },
+        {
+          "value": "few",
+          "label": "One or two earthworms",
+          "interpretation": "Some biological activity is present; results vary with season and moisture."
+        },
+        {
+          "value": "none",
+          "label": "None observed",
+          "interpretation": "No earthworms were observed; this alone does not prove poor soil health."
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know",
+          "interpretation": "Do not infer biological activity."
+        }
+      ]
+    },
+    {
+      "id": "soil_ph",
+      "name": "Soil pH",
+      "question": "What pH range does your soil test strip indicate?",
+      "options": [
+        {
+          "value": "acidic",
+          "label": "Below 6.0",
+          "interpretation": "Acidic soil; some crops may face nutrient availability limitations."
+        },
+        {
+          "value": "slightly_acidic",
+          "label": "6.0–6.5",
+          "interpretation": "Slightly acidic soil; suitability depends on the crop."
+        },
+        {
+          "value": "near_neutral",
+          "label": "6.6–7.3",
+          "interpretation": "Near-neutral soil; generally suitable for many crops."
+        },
+        {
+          "value": "alkaline",
+          "label": "Above 7.3",
+          "interpretation": "Alkaline soil; some nutrients may become less available."
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know",
+          "interpretation": "Do not make a pH-based adjustment."
+        }
+      ]
+    }
+  ]
+}
