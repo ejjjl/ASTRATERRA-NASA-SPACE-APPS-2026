@@ -12,6 +12,10 @@ is built from numbers the model already computed, so every claim can be traced.
 
 from crops import CROP_DATA_GAPS, year_kc
 from scoring import FIXES_NITROGEN, PLANT_FAMILY
+from water_balance import worst_month
+
+MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December"]
 
 # Same groups and weights as the frontend (frontend/src/core/scoring.js), so numbers match.
 CRITERIA_GROUPS = {
@@ -51,6 +55,7 @@ def rotation_facts(steps, replay, rain_risk):
         "replay_years": len(replay),
         "worst_year": worst["year"],
         "worst_pct": worst["water_stress_pct"],
+        "worst_month": worst_month(replay),
     }
 
 
@@ -120,7 +125,9 @@ def summary(facts, is_current):
     cover = ("keeps the soil covered all year" if facts["bare_months"] == 0
              else f"leaves the soil bare about {facts['bare_months']:g} months per year")
     start = "Replayed through 2005-2025, your current rotation had " if is_current else "Replayed through 2005-2025, this rotation had "
-    return f"{start}{stress}. It {cover}."
+    vulnerable = (f" The crop is most often short of water in {MONTH_NAMES[facts['worst_month'] - 1]}."
+                  if facts.get("worst_month") else "")
+    return f"{start}{stress}. It {cover}.{vulnerable}"
 
 
 #  5. Confidence 

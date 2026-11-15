@@ -42,7 +42,9 @@ def simulate_year(months, kc, capacity_mm, water_mm):
         water_mm = max(water_mm, 0)                # can't go below empty
 
         stress_pct = ((demand - actual) / demand) * 100 if demand > 0 else 0                      # share of demand NOT met, 0 to 100
-        results.append({"month": i + 1, "demand_mm": demand, "actual_mm": actual, "stress_pct": stress_pct})
+        results.append({"month": i + 1, "rain_mm": rain, "demand_mm": demand, "actual_mm": actual,
+                        "soil_water_mm": water_mm,            # what is left in the bucket at the end of the month
+                        "stress_pct": stress_pct})
 
     return water_mm, results
 
@@ -92,9 +94,34 @@ def simulate_rotation(monthly, sequence, water_per_m_mm):
             "crop": step["main_crop"],
             "outcome": outcome,
             "water_stress_pct": stress_pct,
+            "bucket_mm": round(capacity_mm),          # how much water the soil can hold for this crop's roots
+            # The 12 months behind this year's result, so the app can show the bucket filling and emptying.
+            "months": [{
+                "month": r["month"],
+                "crop_in_field": MAIN_CROP_KC[step["main_crop"]][r["month"] - 1] > 0,
+                "rain_mm": round(float(r["rain_mm"])),
+                "demand_mm": round(float(r["demand_mm"])),       # water the crop/soil wanted
+                "actual_mm": round(float(r["actual_mm"])),       # water it actually got
+                "soil_water_mm": round(float(r["soil_water_mm"])),
+                "stress_pct": round(float(r["stress_pct"])),
+            } for r in results],
         })
 
     return replay
+
+
+def worst_month(replay):
+    """
+    The month where the main crop is short of water the most, summed over all replayed years
+    (e.g. 7 = July). None if the crop was never short of water.
+    """
+    shortfall = {}
+    for year in replay:
+        for m in year["months"]:
+            if m["crop_in_field"]:
+                shortfall[m["month"]] = shortfall.get(m["month"], 0) + (m["demand_mm"] - m["actual_mm"])
+    month, total = max(shortfall.items(), key=lambda kv: kv[1], default=(None, 0))
+    return month if total > 0 else None
 if __name__ == "__main__":
     from nasa_power import get_daily
     from features import monthly_by_year

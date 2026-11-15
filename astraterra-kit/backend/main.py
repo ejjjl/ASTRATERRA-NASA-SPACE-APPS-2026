@@ -31,7 +31,7 @@ from nasa_power import get_daily
 from soil import get_soil, apply_overrides, water_per_metre
 from terrain import risk_zones
 from cdl import crop_history, detect_rotation, is_cropland
-from water_balance import simulate_rotation
+from water_balance import simulate_rotation, worst_month
 from scoring import score_rotation
 from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
 from journal import journal_clues
@@ -160,7 +160,7 @@ def analyze(req: AnalyzeRequest):
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
         "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "rotations[].scores.profit", "rotations[].water_stress.worst_month",
+        "rotations[].scores.profit",
     ]
 
     #  Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) 
@@ -269,10 +269,10 @@ def analyze(req: AnalyzeRequest):
             "evidence": evidence,
             **rotation_text(rot),          # why / benefits / risks / gaps / sources
             "water_stress": {
-                **sample["water_stress"],          # keeps worst_month (placeholder)
                 "years_with_stress": len(bad_years),
                 "years_total": len(replay),
                 "worst_year": max(replay, key=lambda r: r["water_stress_pct"])["year"],
+                "worst_month": worst_month(replay),   # month the crop is short of water most (7 = July)
             },
             "replay": replay,
             "fit": fit_breakdown(scores, req.priorities),    # "what 71 means"
@@ -301,7 +301,7 @@ def analyze(req: AnalyzeRequest):
     return response
 
 
-# ---------- 4. Farm Journal clues ----------
+# 4. Farm Journal clues 
 class JournalEntry(BaseModel):
     year: int
     crop: str
