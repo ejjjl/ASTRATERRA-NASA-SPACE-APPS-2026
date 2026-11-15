@@ -1,0 +1,21 @@
+.panel input[type=range], .panel input[type=checkbox] { accent-color: #2f6b45; }
+.rc-bars { display: grid; gap: 4px; margin: 8px 0; }
+.rc-barrow { display: grid; grid-template-columns: 96px 1fr 28px; align-items: center; gap: 8px; font-size: .8rem; }
+.rc-barlabel { color: #4a5a4f; }
+.rc-track { height: 8px; background: #e9e5d8; border-radius: 4px; overflow: hidden; display: block; }
+.rc-fill { display: block; height: 100%; background: #2f6b45; border-radius: 4px; transition: width .3s; }
+.rc-barval { text-align: right; font-variant-numeric: tabular-nums; color: #4a5a4f; }
+
+.rc-replay { margin: 10px 0; }
+.rc-replay-head { display: flex; justify-content: space-between; font-size: .8rem; color: #4a5a4f; margin-bottom: 4px; }
+.rc-strip { display: grid; grid-template-columns: repeat(21, 1fr); gap: 2px; }
+.rc-sq { height: 16px; border-radius: 3px; display: block; }
+.rc-sq.ok { background: #cfe5d3; }
+.rc-sq.stress { background: #e6a23c; }
+.rc-sq.fail { background: #c0392b; }
+.rc-years { display: flex; justify-content: space-between; font-size: .7rem; color: #6b776e; margin-top: 2px; }
+
+.rc-mini { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; margin: 6px 0; }
+.rc-mo { text-align: center; font-size: .65rem; padding: 2px 0; border-radius: 3px; }
+.rc-mo.bare { background: #e8dcc0; }
+.rc-mo.cover { background: #cfe5d3; }

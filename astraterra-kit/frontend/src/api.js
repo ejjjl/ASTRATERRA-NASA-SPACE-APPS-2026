@@ -1,6 +1,6 @@
 // Single place that talks to the backend.
 // Flip USE_MOCK to false once the FastAPI backend serves POST /api/analyze.
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 export async function analyze(body) {
   if (USE_MOCK) {

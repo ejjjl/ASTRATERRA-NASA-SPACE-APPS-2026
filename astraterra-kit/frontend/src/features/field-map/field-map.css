@@ -1,0 +1,5 @@
+.fm-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 12px 0 4px; }
+.fm-stat { background: #f6f4ee; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+.fm-num { font-size: 1.25rem; font-weight: 700; color: #2f6b45; font-variant-numeric: tabular-nums; }
+.fm-lab { font-size: .8rem; color: #4a5a4f; }
+.fm-words { font-size: .75rem; color: #6b776e; }
