@@ -9,3 +9,11 @@
 .err-banner { background: #fdecea; border: 1px solid #c0392b; color: #7a2218; border-radius: 12px; padding: 12px 16px; margin: 12px 0; }
 .data-credit { margin-top: 8px; font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+/* Rotation cards: each card keeps its own height, so opening one no longer stretches the others. */
+div.grid { align-items: start; }
+
+/* Card header: title wraps beside the badges; badges stay on one line with room around the text. */
+.card header { align-items: flex-start; }
+.card header h3 { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.card header .badge { flex: none; white-space: nowrap; line-height: 1.2; padding: 5px 12px; }
