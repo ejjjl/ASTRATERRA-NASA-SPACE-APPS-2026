@@ -39,6 +39,22 @@ ROOT_DEPTH_M = {
 }
 
 
+# ---- Real values from Robajr's crop database (data/crops/crops.csv) replace the placeholders ----
+# Where the CSV has a complete FAO-56 curve or a root depth, it wins. Blank cells keep the
+# placeholder above and are listed in CROP_DATA_GAPS so the app can say so.
+from crop_data import load_crops
+
+CROP_DB, CROP_DATA_GAPS = load_crops()
+KC_SOURCE = {crop: "placeholder" for crop in MAIN_CROP_KC}   # where each crop's curve came from
+
+for crop_id, info in CROP_DB.items():
+    if info["kc_monthly"] and crop_id not in COVER_CROP_KC:
+        MAIN_CROP_KC[crop_id] = info["kc_monthly"]
+        KC_SOURCE[crop_id] = "crops.csv (FAO-56)"
+    if info["root_depth_m"]:
+        ROOT_DEPTH_M[crop_id] = info["root_depth_m"]
+
+
 def year_kc(main_crop, cover_crop=None):
     """
     Return 12 Kc values (Jan..Dec) for one rotation year.

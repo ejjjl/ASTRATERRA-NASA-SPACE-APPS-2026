@@ -9,18 +9,18 @@ Crop traits below are PLACEHOLDERS until Robajr's data/crops/crops.csv is loaded
 (columns plant_family, nitrogen_fixing, organic_matter_value, forage_value).
 """
 
-from crops import year_kc
+from crops import CROP_DB, year_kc
 
-# ---- Crop traits (placeholder, from the crop template + common agronomy) ----
-PLANT_FAMILY = {"corn": "Poaceae", "soybean": "Fabaceae", "wheat_winter": "Poaceae", "alfalfa": "Fabaceae"}
-FIXES_NITROGEN = {"corn": False, "soybean": True, "wheat_winter": False, "alfalfa": True,
-                  "red_clover": True, "cereal_rye": False}
+# ---- Crop traits: plant family + nitrogen fixing come from Robajr's crops.csv ----
+PLANT_FAMILY = {crop: info["family"] for crop, info in CROP_DB.items()}
+FIXES_NITROGEN = {crop: info["fixes_nitrogen"] for crop, info in CROP_DB.items()}
+# Still placeholders (the CSV columns organic_matter_value / forage_value are empty):
 # How much each crop builds soil organic matter in one year (roots + residue left behind), 0-1.
 # Perennials keep roots in the ground all year; soybean leaves little residue.
-ORGANIC_MATTER_VALUE = {"corn": 0.4, "soybean": 0.15, "wheat_winter": 0.5, "alfalfa": 1.0}
+ORGANIC_MATTER_VALUE = {"corn": 0.4, "soybean": 0.15, "wheat_winter": 0.5, "alfalfa": 1.0, "sorghum": 0.4}
 COVER_CROP_OM_BONUS = 0.3
-# Forage produced in one year (hay / grazing), 0-1.
-FORAGE_VALUE = {"corn": 0.0, "soybean": 0.0, "wheat_winter": 0.1, "alfalfa": 1.0,
+# Forage produced in one year (hay / grazing), 0-1. Grain sorghum: grain only.
+FORAGE_VALUE = {"corn": 0.0, "soybean": 0.0, "wheat_winter": 0.1, "alfalfa": 1.0, "sorghum": 0.0,
                 "red_clover": 0.3, "cereal_rye": 0.2}
 
 # Heavy-rain weight of a bare month: bare soil in a stormy month erodes most.
