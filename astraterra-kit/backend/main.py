@@ -131,6 +131,21 @@ CURRENT_TEXT = {
 }
 
 
+# Where each score comes from, so nobody mistakes an estimate for a measurement.
+SCORE_BASIS = {
+    "water": "modelled (NASA POWER weather + FAO-56 water balance, 21-year replay)",
+    "erosion": "modelled (bare months x heavy-rain months x NASA SRTM slope)",
+    "bare_months": "crop calendar (crop database planting and growth stages)",
+    "nitrogen": "crop database (nitrogen-fixing crops)",
+    "pest_break": "crop database (number of crops and plant families)",
+    "organic_matter": "heuristic indicator (team estimates, not sourced field data)",
+    "forage": "heuristic indicator (team estimates, not sourced field data)",
+    "profit": "placeholder (no local prices or production costs yet)",
+}
+HEURISTIC_GAP = ("Organic-matter and forage scores are heuristic indicators based on team estimates, "
+                 "not sourced field data. Profit uses placeholder values until local prices and costs are added.")
+
+
 def rotation_text(rot):
     """why / benefits / risks / gaps / sources: from the template, plus crop-data gaps for this rotation's crops."""
     t = rot["template"] or CURRENT_TEXT
@@ -141,7 +156,7 @@ def rotation_text(rot):
         "why": t["why"],
         "benefits": t["benefits"],
         "risks_for_local_review": t["risks_for_local_review"],
-        "data_gaps": t["data_gaps"] + crop_gaps,
+        "data_gaps": t["data_gaps"] + crop_gaps + [HEURISTIC_GAP],
         "sources": t["sources"],
         "market_requirements": market if isinstance(market, str) else "; ".join(market),
     }
@@ -303,6 +318,7 @@ def analyze(req: AnalyzeRequest):
             "sequence": [s["main_crop"] + (f" + {s['cover_crop']}" if s["cover_crop"] else "") for s in rot["steps"]],
             "scores": scores,
             "evidence": evidence,
+            "score_basis": SCORE_BASIS,          # modelled / crop database / heuristic / placeholder
             **rotation_text(rot),          # why / benefits / risks / gaps / sources
             "water_stress": {
                 "years_with_stress": len(bad_years),

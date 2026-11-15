@@ -105,7 +105,7 @@ Open http://localhost:5173. The demo farms (Driftless Area WI 43.70767, -90.9387
 
 - **Model scope:** drought stress only; no flooding, hail, disease or pest-pressure model. Monthly time steps; Hargreaves ET0 tends to overestimate in humid climates. One stress threshold for all crops.
 - **Farming systems:** dryland fallow and irrigation are not modelled yet, so dry regions show unrealistic failures.
-- **Data:** some crops still use placeholder values (listed in each card's data gaps); profit uses placeholder values until local prices are added.
+- **Data:** some crops still use placeholder values (listed in each card's data gaps). The **organic-matter and forage scores are heuristic indicators** based on team estimates, not sourced field data, and **profit uses placeholder values** until local prices and production costs are added. Water, erosion, bare-month, nitrogen and pest-break scores come from the model and the sourced crop database (`score_basis` in the API lists the basis of each score).
 - **Next:** SMAP soil moisture, ECOSTRESS heat stress, GPM rainfall and MODIS NDVI (to verify bare months); flooding and fallow; local market prices; validation in more counties and crops.
 
 ## Team
