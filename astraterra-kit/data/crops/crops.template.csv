@@ -1,9 +1,9 @@
-crop_id,common_name,category,plant_family,planting_window_start,planting_window_end,season_length_days,kc_ini,kc_mid,kc_end,stage_len_ini,stage_len_dev,stage_len_mid,stage_len_late,water_use_class,drought_tolerance,heat_tolerance,frost_tolerance,nitrogen_fixing,rooting_depth_m,ph_min,ph_max,erosion_cover_value,organic_matter_value,forage_value,typical_price_usd_per_unit,price_unit,common_pests_diseases,source_url,notes
-corn,Corn (grain),cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,
-soybean,Soybean,legume,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,
-wheat_winter,Winter wheat,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,
-oats,Oats,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,
-sorghum,Sorghum,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,
-alfalfa,Alfalfa,legume forage,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,
-red_clover,Red clover,legume cover,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,
-cereal_rye,Cereal rye (cover),cereal cover,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,
+crop_id,common_name,category,plant_family,planting_window_start,planting_window_end,season_length_days,kc_ini,kc_mid,kc_end,stage_len_ini,stage_len_dev,stage_len_mid,stage_len_late,water_use_class,drought_tolerance,heat_tolerance,frost_tolerance,nitrogen_fixing,rooting_depth_m,ph_min,ph_max,erosion_cover_value,organic_matter_value,forage_value,typical_price_usd_per_unit,price_unit,common_pests_diseases,source_url,notes,root_depth_min_m,root_depth_max_m,root_depth_source_url,root_depth_basis
+corn,Corn (grain),cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,,,,,
+soybean,Soybean,legume,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,,,,,
+wheat_winter,Winter wheat,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,,,,,
+oats,Oats,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,,,,,
+sorghum,Sorghum,cereal,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,,,,,
+alfalfa,Alfalfa,legume forage,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,,,,,
+red_clover,Red clover,legume cover,Fabaceae,,,,,,,,,,,,,,,yes,,,,,,,,,,,,,,,
+cereal_rye,Cereal rye (cover crop),cereal cover,Poaceae,,,,,,,,,,,,,,,no,,,,,,,,,,,,,,,
