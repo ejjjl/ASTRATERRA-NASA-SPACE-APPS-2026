@@ -20,10 +20,14 @@
 
 /* ---- Season calendar ---- */
 .cj-cal { overflow-x: auto; border: 1px solid var(--line, #d9d4c5); border-radius: 12px; padding: 8px; background: var(--paper); }
-.cj-cal-row { display: grid; grid-template-columns: 92px repeat(12, minmax(28px, 1fr)); gap: 3px; align-items: center; min-width: 520px; }
-.cj-cal-row + .cj-cal-row { margin-top: 3px; }
+.cj-cal-row { display: grid; grid-template-columns: 120px repeat(12, minmax(28px, 1fr)); gap: 3px; align-items: center; min-width: 560px; }
+.cj-cal-row + .cj-cal-row { margin-top: 4px; }
 .cj-cal-row.head span { font-size: .72rem; color: var(--ink-soft); text-align: center; }
-.cj-cal-label { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: .85rem; }
+.cj-cal-label { display: flex; align-items: center; gap: 6px; font-size: .85rem; line-height: 1.1; }
+.cj-cal-label small { display: block; color: var(--ink-soft); font-size: .72rem; }
+.cj-cal-missing { grid-column: span 12; height: 28px; border-radius: 6px; border: 1px dashed var(--rule); background: transparent;
+  color: var(--ink-soft); font-size: .78rem; cursor: pointer; }
+.cj-cal-missing:hover { border-color: #2f6b45; color: #2f6b45; }
 .cj-cal-cell { height: 28px; border-radius: 6px; background: #efe9da; display: flex; align-items: center; justify-content: center; font-size: .8rem; }
 .cj-cal-cell.on { background: #b9d9a5; }
 .cj-cal-cell.on.corn { background: #f2d77a; }

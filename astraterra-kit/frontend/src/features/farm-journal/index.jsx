@@ -51,10 +51,11 @@ function Stamp({ outcome, small }) {
   return <span className={`cj-stamp ${outcome} ${small ? "small" : ""}`}>{o.mark} {o.label}</span>;
 }
 
-function SeasonCalendar({ entries }) {
-  const rows = entries.filter((e) => e.planted && e.harvested).slice(0, 8);
+function SeasonCalendar({ entries, onEdit }) {
+  // Every entry gets its own row (several crops in one year = several rows), newest first.
+  const rows = entries.slice(0, 12);
   if (!rows.length) {
-    return <p className="hint">Add planting and harvest months to an entry to see it on the season calendar.</p>;
+    return <p className="hint">Your seasons will appear here once you add an entry.</p>;
   }
   return (
     <div className="cj-cal" role="table" aria-label="Season calendar">
@@ -64,11 +65,25 @@ function SeasonCalendar({ entries }) {
       </div>
       {rows.map((e) => {
         const covered = seasonMonths(Number(e.planted), Number(e.harvested));
+        const label = (
+          <span className="cj-cal-label" role="rowheader">
+            <CropArt crop={e.crop} size={26} title={CROP_NAME[e.crop]} />
+            <span><b>{e.year}</b><small>{CROP_NAME[e.crop] || e.crop}</small></span>
+          </span>
+        );
+        if (!covered.length) {
+          return (
+            <div className="cj-cal-row" role="row" key={e.id}>
+              {label}
+              <button type="button" className="cj-cal-missing" role="cell" onClick={() => onEdit(e)}>
+                Add planting and harvest months
+              </button>
+            </div>
+          );
+        }
         return (
           <div className="cj-cal-row" role="row" key={e.id}>
-            <span className="cj-cal-label" role="rowheader">
-              <CropArt crop={e.crop} size={26} title={CROP_NAME[e.crop]} /> {e.year}
-            </span>
+            {label}
             {MONTHS.map((m, i) => {
               const on = covered.includes(i + 1);
               const edge = i + 1 === Number(e.planted) ? "plant" : i + 1 === Number(e.harvested) ? "harvest" : "";
@@ -191,7 +206,7 @@ function FarmJournal() {
           <Clues clues={clues} loading={cluesLoading} />
 
           <h3 className="cj-h">Season calendar</h3>
-          <SeasonCalendar entries={sorted} />
+          <SeasonCalendar entries={sorted} onEdit={(e) => startFrom(e, e.id)} />
 
           <h3 className="cj-h">Pages</h3>
           <div className="cj-pages">
