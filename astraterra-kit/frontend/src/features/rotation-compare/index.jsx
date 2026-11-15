@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../../core/AppState.jsx";
 import { CRITERIA_GROUPS, PRIORITY_LABELS, rankRotations } from "../../core/scoring.js";
+import { CROP_LABEL, OUTCOME_LABEL, ReplayLegend, YearDetail } from "./replay-detail.jsx";
 import "./rotation-compare.css";
 
 const pct = (v) => Math.round((v ?? 0) * 100);
@@ -25,22 +26,28 @@ function ScoreBars({ scores }) {
 }
 
 function ReplayStrip({ replay }) {
+  const [picked, setPicked] = useState(null);           // the year whose months are shown
   if (!replay?.length) return null;
   const bad = replay.filter((y) => y.outcome !== "ok").length;
+  const year = replay.find((y) => y.year === picked);
   return (
     <div className="rc-replay">
       <div className="rc-replay-head">
         <strong>Past {replay.length} years replayed</strong>
         <span>{bad === 0 ? "No stressed years" : `${bad} stressed or failed`}</span>
       </div>
-      <div className="rc-strip" role="img"
+      <div className="rc-strip" role="group"
         aria-label={`Replay of ${replay.length} past years: ${bad} years with water stress or failure`}>
         {replay.map((y) => (
-          <span key={y.year} className={`rc-sq ${y.outcome}`}
-            title={`${y.year}: ${y.outcome}, ${y.water_stress_pct}% water stress`} />
+          <button key={y.year} type="button" className={`rc-sq ${y.outcome} ${picked === y.year ? "on" : ""}`}
+            aria-pressed={picked === y.year}
+            onClick={() => setPicked(picked === y.year ? null : y.year)}
+            title={`${y.year} · ${CROP_LABEL[y.crop] || y.crop} · ${y.water_stress_pct}% of water need not met · ${OUTCOME_LABEL[y.outcome]}`} />
         ))}
       </div>
       <div className="rc-years"><span>{replay[0].year}</span><span>{replay[replay.length - 1].year}</span></div>
+      <ReplayLegend />
+      {year && <YearDetail year={year} onClose={() => setPicked(null)} />}
     </div>
   );
 }

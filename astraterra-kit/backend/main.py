@@ -15,10 +15,13 @@ Each placeholder is listed in the response under "_placeholders"
 
 import copy
 import json
+import logging
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from crops import CROP_DATA_GAPS, MAIN_CROP_KC, year_kc
@@ -28,12 +31,64 @@ from nasa_power import get_daily
 from soil import get_soil, apply_overrides, water_per_metre
 from terrain import risk_zones
 from cdl import crop_history, detect_rotation, is_cropland
-from water_balance import simulate_rotation
+from water_balance import simulate_rotation, worst_month
 from scoring import score_rotation
 from explain import confidence, field_facts, fit_breakdown, recommendation, rotation_facts, summary
 from journal import journal_clues
+from trends import climate_trends
+
+# Brandon's k-means year types (backend/climate_analysis.py). Until that file is pushed,
+# the API keeps working and simply leaves year types empty.
+try:
+    from climate_analysis import year_types as _year_types
+except ImportError:
+    _year_types = None
+
+YEAR_TYPE_LABELS = {"hot_dry": "Hot/dry", "normal": "Normal", "wet_cool": "Wet/cool"}
+
+
+def year_type_summary(types):
+    """{2012: "hot_dry", ...} -> contract format [{label, count, years, caveat}]"""
+    groups = {}
+    for year, t in sorted(types.items()):
+        groups.setdefault(t, []).append(int(year))
+    return [{"label": YEAR_TYPE_LABELS.get(t, str(t).replace("_", " ").capitalize()), "type": t,
+             "count": len(years), "years": years,
+             "caveat": f"Small sample ({len(types)} years); groups found by k-means clustering of summer weather."}
+            for t, years in groups.items()]
 
 app = FastAPI(title="ASTRATERRA API")
+log = logging.getLogger("uvicorn.error")      # prints in the same console as uvicorn
+
+
+def fetch_all(lat, lon):
+    """
+    Download the 4 data sources AT THE SAME TIME instead of one after another,
+    so a new place takes as long as the slowest source, not all four added up.
+    Each source is cached after the first time, so repeat visits are instant.
+    Returns (results, seconds per source).
+    """
+    jobs = {
+        "nasa_power": lambda: get_daily(lat, lon),
+        "usda_cdl": lambda: crop_history(lat, lon),
+        "srtm_terrain": lambda: risk_zones(lat, lon),
+        "soilgrids": lambda: get_soil(lat, lon),
+    }
+    def timed(name):
+        start = time.perf_counter()
+        result = jobs[name]()
+        return result, round(time.perf_counter() - start, 2)
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {name: pool.submit(timed, name) for name in jobs}
+        results, timings = {}, {}
+        for name, future in futures.items():
+            try:
+                results[name], timings[name] = future.result()
+            except Exception as err:                      # only NASA POWER is essential (see below)
+                results[name], timings[name] = None, None
+                log.warning("%s failed: %s", name, err)
+    return results, timings
 
 # Demo farm (Driftless Area, near Bloomingdale, WI): hay until 2019, corn/soy since 2020,
 # on hilly ground. Used when the frontend does not send a location.
@@ -99,14 +154,20 @@ def analyze(req: AnalyzeRequest):
     lon = req.lon if req.lon is not None else DEFAULT_LON
     field_name = req.field_name or req.name or "Your field"
 
+    started = time.perf_counter()
+    fetched, timings = fetch_all(lat, lon)
+    if fetched["nasa_power"] is None:
+        # Without weather data there is nothing to analyse: say so clearly instead of crashing.
+        raise HTTPException(status_code=502, detail="NASA POWER did not respond. Please try again in a minute.")
+
     #  Real NASA data 
-    daily = get_daily(lat, lon)
+    daily = fetched["nasa_power"]
     monthly = monthly_by_year(daily)
     normals = monthly_normals(monthly).reset_index()
     years =sorted(monthly.index.get_level_values("year").unique())
 
     #  What the field really grew (USDA CDL). Used when the farmer didn't tell us. 
-    history = crop_history(lat, lon)
+    history = fetched["usda_cdl"] or []
     detected, fit = detect_rotation(history, int(years[0]))
     if req.current_rotation:                                       # the farmer told us
         wanted, rotation_source = req.current_rotation, "farmer"
@@ -119,12 +180,12 @@ def analyze(req: AnalyzeRequest):
 
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
-        "climate.trends", "climate.year_types", "climate.yearly[].year_type",
-        "rotations[].scores.profit", "rotations[].water_stress.worst_month",
+        "climate.year_types", "climate.yearly[].year_type",
+        "rotations[].scores.profit",
     ]
 
     #  Terrain: NASA SRTM elevation -> slope (erosion) + low spots (frost pockets) 
-    zones, elevation_m, terrain = risk_zones(lat, lon)
+    zones, elevation_m, terrain = fetched["srtm_terrain"] or ({"type": "FeatureCollection", "features": []}, None, {})
     response["risk_zones"] = zones
 
     response["field"] = {
@@ -140,9 +201,11 @@ def analyze(req: AnalyzeRequest):
         "rotation_source": rotation_source,    # farmer | USDA Cropland Data Layer | default
     }
     response["climate"]["frost"] = frost_dates(daily)
+    # Mann-Kendall + Sen's slope on yearly values (trends.py): significant trends first
+    response["climate"]["trends"] = climate_trends(daily, monthly)
 
     # Soil: SoilGrids, then the farmer's own numbers on top ---
-    soil_values, soil_source = apply_overrides(get_soil(lat, lon), req.soil_overrides)
+    soil_values, soil_source = apply_overrides(fetched["soilgrids"] or get_soil(lat, lon), req.soil_overrides)
     per_metre = water_per_metre(soil_values["clay_pct"], soil_values["sand_pct"], soil_values["organic_carbon_pct"])
     response["soil"] = {**soil_values, "water_per_metre_mm": per_metre, "source": soil_source}
 
@@ -178,6 +241,17 @@ def analyze(req: AnalyzeRequest):
     by_year["season_gdd"] = season.groupby("year")["gdd"].sum()
     # Soil moisture vs normal: + = wetter summer than the 21-year average, - = drier
     by_year["soil_moisture_vs_normal"] = by_year["summer_soil_moisture_root"] - by_year["summer_soil_moisture_root"].mean()
+    # Year types: Brandon's k-means groups each year by its summer weather (empty until pushed)
+    types = {}
+    if _year_types is not None:
+        try:
+            types = {int(y): t for y, t in _year_types(by_year).items()}
+        except Exception as err:                      # a bug there must not break the whole analysis
+            log.warning("year_types failed: %s", err)
+    response["climate"]["year_types"] = year_type_summary(types)
+    if types:                                          # real year types -> no longer a placeholder
+        response["_placeholders"] = [p for p in response["_placeholders"] if "year_type" not in p]
+
     response["climate"]["yearly"] = [
         {
             "year": int(year),
@@ -187,7 +261,7 @@ def analyze(req: AnalyzeRequest):
             "summer_soil_moisture_root": round(float(r.summer_soil_moisture_root), 2),
             "soil_moisture_vs_normal": round(float(r.soil_moisture_vs_normal), 3),
             "season_gdd": round(float(r.season_gdd)),
-            "year_type": None,  # Brandon's clustering fills this in
+            "year_type": types.get(int(year)),   # hot_dry / normal / wet_cool (Brandon's k-means)
         }
         for year, r in by_year.iterrows()
     ]
@@ -229,10 +303,10 @@ def analyze(req: AnalyzeRequest):
             "evidence": evidence,
             **rotation_text(rot),          # why / benefits / risks / gaps / sources
             "water_stress": {
-                **sample["water_stress"],          # keeps worst_month (placeholder)
                 "years_with_stress": len(bad_years),
                 "years_total": len(replay),
                 "worst_year": max(replay, key=lambda r: r["water_stress_pct"])["year"],
+                "worst_month": worst_month(replay),   # month the crop is short of water most (7 = July)
             },
             "replay": replay,
             "fit": fit_breakdown(scores, req.priorities),    # "what 71 means"
@@ -252,10 +326,16 @@ def analyze(req: AnalyzeRequest):
 
     response["rotations"] = rotations_out
     response["recommendation"] = recommendation(rotations_out, req.priorities, req.constraints)
+
+    # Timing log: which part was slow? (seconds; cached sources take ~0.01 s)
+    timings["model_and_scoring"] = round(time.perf_counter() - started - max(t or 0 for t in timings.values()), 2)
+    timings["total"] = round(time.perf_counter() - started, 2)
+    response["_timings_s"] = timings
+    log.info("analyze %.4f,%.4f timings: %s", lat, lon, timings)
     return response
 
 
-# ---------- 4. Farm Journal clues ----------
+# 4. Farm Journal clues 
 class JournalEntry(BaseModel):
     year: int
     crop: str

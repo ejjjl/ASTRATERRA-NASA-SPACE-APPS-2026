@@ -1,0 +1,54 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='640' viewBox='0 0 1600 640'>
+<rect width='1600' height='640' fill='#06392f'/>
+<defs><marker id='a' markerWidth='10' markerHeight='10' refX='8' refY='5' orient='auto'><path d='M0,0 L10,5 L0,10 z' fill='#f6c61a'/></marker></defs>
+<rect x='20.0' y='30' width='360' height='520' rx='18' fill='none' stroke='#ffffff' stroke-width='2'/>
+<rect x='20.0' y='30' width='360' height='64' rx='18' fill='#f6c61a'/>
+<rect x='20.0' y='70' width='360' height='24' fill='#f6c61a'/>
+<text x='200.0' y='74' font-family='Segoe UI, Arial, sans-serif' font-size='32' fill='#06392f' font-weight='bold' text-anchor='middle'>1  DATA</text>
+<text x='42.0' y='142' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>NASA POWER</text>
+<text x='42.0' y='182' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>21 years of daily weather</text>
+<text x='42.0' y='222' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>rain · heat · sun · soil moisture</text>
+<text x='42.0' y='278' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>NASA SRTM</text>
+<text x='42.0' y='318' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>30 m elevation: slopes</text>
+<text x='42.0' y='374' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>+ SoilGrids soil</text>
+<text x='42.0' y='414' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>+ USDA crop maps</text>
+<text x='42.0' y='454' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>+ FAO-56 crop water</text>
+<line x1='386.0' y1='290.0' x2='412.0' y2='290.0' stroke='#f6c61a' stroke-width='5' marker-end='url(#a)'/>
+<rect x='420.0' y='30' width='360' height='520' rx='18' fill='none' stroke='#f6c61a' stroke-width='4'/>
+<rect x='420.0' y='30' width='360' height='64' rx='18' fill='#f6c61a'/>
+<rect x='420.0' y='70' width='360' height='24' fill='#f6c61a'/>
+<text x='600.0' y='74' font-family='Segoe UI, Arial, sans-serif' font-size='32' fill='#06392f' font-weight='bold' text-anchor='middle'>2  HARMONIZE</text>
+<text x='442.0' y='142' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Different resolutions,</text>
+<text x='442.0' y='182' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>one field</text>
+<text x='442.0' y='238' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>weather   50 km</text>
+<text x='442.0' y='278' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>soil        250 m</text>
+<text x='442.0' y='318' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>elevation   30 m</text>
+<text x='442.0' y='358' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>crop maps   30 m</text>
+<text x='442.0' y='414' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>daily → monthly, per field</text>
+<line x1='786.0' y1='290.0' x2='812.0' y2='290.0' stroke='#f6c61a' stroke-width='5' marker-end='url(#a)'/>
+<rect x='820.0' y='30' width='360' height='520' rx='18' fill='none' stroke='#ffffff' stroke-width='2'/>
+<rect x='820.0' y='30' width='360' height='64' rx='18' fill='#f6c61a'/>
+<rect x='820.0' y='70' width='360' height='24' fill='#f6c61a'/>
+<text x='1000.0' y='74' font-family='Segoe UI, Arial, sans-serif' font-size='32' fill='#06392f' font-weight='bold' text-anchor='middle'>3  MODEL</text>
+<text x='842.0' y='142' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Water balance</text>
+<text x='842.0' y='182' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>FAO-56 crop demand</text>
+<text x='842.0' y='222' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>+ soil water bucket</text>
+<text x='842.0' y='278' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>21-year replay</text>
+<text x='842.0' y='318' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>every rotation, 2005-2025</text>
+<text x='842.0' y='374' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Rule-based scores</text>
+<text x='842.0' y='414' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>water · erosion · nitrogen</text>
+<text x='842.0' y='454' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>soil · pests · forage</text>
+<line x1='1186.0' y1='290.0' x2='1212.0' y2='290.0' stroke='#f6c61a' stroke-width='5' marker-end='url(#a)'/>
+<rect x='1220.0' y='30' width='360' height='520' rx='18' fill='none' stroke='#ffffff' stroke-width='2'/>
+<rect x='1220.0' y='30' width='360' height='64' rx='18' fill='#f6c61a'/>
+<rect x='1220.0' y='70' width='360' height='24' fill='#f6c61a'/>
+<text x='1400.0' y='74' font-family='Segoe UI, Arial, sans-serif' font-size='32' fill='#06392f' font-weight='bold' text-anchor='middle'>4  DECISION</text>
+<text x='1242.0' y='142' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Ranked recommendation</text>
+<text x='1242.0' y='182' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#bcd3c8' font-weight='normal' text-anchor='start'>for the farmer&#x27;s priorities</text>
+<text x='1242.0' y='238' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Reasons with numbers</text>
+<text x='1242.0' y='278' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Evidence + sources</text>
+<text x='1242.0' y='318' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Risks for local review</text>
+<text x='1242.0' y='358' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Data gaps</text>
+<text x='1242.0' y='414' font-family='Segoe UI, Arial, sans-serif' font-size='26' fill='#ffffff' font-weight='bold' text-anchor='start'>Farm Journal clues</text>
+<text x='800.0' y='600' font-family='Segoe UI, Arial, sans-serif' font-size='28' fill='#f6c61a' font-weight='bold' text-anchor='middle'>Every score traces back to a real number: no AI decides the scores.</text>
+</svg>
