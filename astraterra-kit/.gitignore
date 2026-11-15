@@ -10,3 +10,10 @@ data/cache/*
 !data/cache/power_42.03_-93.62_2005_2025.json
 !data/cache/soil_42.03_-93.62.json
 !data/cache/terrain_42.0300_-93.6200.json
+# Wisconsin demo farm (Alex's pin + the corn/soy field 250 m west)
+!data/cache/power_43.71_-90.94_2005_2025.json
+!data/cache/soil_43.71_-90.94.json
+!data/cache/terrain_43.7077_-90.9358.json
+!data/cache/cdl_43.7077_-90.9358.json
+!data/cache/terrain_43.7077_-90.9388.json
+!data/cache/cdl_43.7077_-90.9388.json

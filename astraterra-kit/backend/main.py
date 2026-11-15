@@ -26,12 +26,14 @@ from features import monthly_by_year, monthly_normals, frost_dates
 from nasa_power import get_daily
 from soil import get_soil, apply_overrides, water_per_metre
 from terrain import risk_zones
+from cdl import crop_history, detect_rotation, is_cropland
 from water_balance import simulate_rotation
 
 app = FastAPI(title="ASTRATERRA API")
 
-# Iowa demo farm, used when the frontend does not send a location yet.
-DEFAULT_LAT, DEFAULT_LON = 42.03, -93.62
+# Demo farm (Driftless Area, near Bloomingdale, WI): hay until 2019, corn/soy since 2020,
+# on hilly ground. Used when the frontend does not send a location.
+DEFAULT_LAT, DEFAULT_LON = 43.70767, -90.93877
 
 # The sample contract: used for the parts that are not built yet.
 CONTRACT = json.loads(
@@ -48,7 +50,7 @@ class AnalyzeRequest(BaseModel):
     lon: Optional[float] = None
     field_name: Optional[str] = None
     name: Optional[str] = None
-    current_rotation: list[str] = ["corn", "soybean"]
+    current_rotation: Optional[list[str]] = None   # None/[] = not given: detect it from USDA CDL
     priorities: dict[str, float] = {}
     constraints: dict[str, bool] = {}
     soil_overrides: dict[str, Optional[float]] = {}
@@ -82,14 +84,23 @@ def analyze(req: AnalyzeRequest):
     lon = req.lon if req.lon is not None else DEFAULT_LON
     field_name = req.field_name or req.name or "Your field"
 
-    # Unknown crops would crash the model, so keep only the ones we have data for.
-    current = [c for c in req.current_rotation if c in MAIN_CROP_KC] or ["corn", "soybean"]
-
     # --- Real NASA data ---
     daily = get_daily(lat, lon)
     monthly = monthly_by_year(daily)
     normals = monthly_normals(monthly).reset_index()
     years =sorted(monthly.index.get_level_values("year").unique())
+
+    # --- What the field really grew (USDA CDL). Used when the farmer didn't tell us. ---
+    history = crop_history(lat, lon)
+    detected, fit = detect_rotation(history, int(years[0]))
+    if req.current_rotation:                                       # the farmer told us
+        wanted, rotation_source = req.current_rotation, "farmer"
+    elif detected:
+        wanted, rotation_source = detected, "USDA Cropland Data Layer"
+    else:
+        wanted, rotation_source = ["corn", "soybean"], "default"
+    # Unknown crops would crash the model, so keep only the ones we have data for.
+    current = [c for c in wanted if c in MAIN_CROP_KC] or ["corn", "soybean"]
 
     response = copy.deepcopy(SAMPLE)   # start from the sample, then overwrite real parts
     response["_placeholders"] = [
@@ -107,6 +118,12 @@ def analyze(req: AnalyzeRequest):
         "elevation_m": elevation_m,
         "data_years": [int(years[0]), int(years[-1])],
         "terrain": terrain,   # field slope, steepest slope, height range (m)
+        "is_cropland": is_cropland(history),   # False = pin is on a town / lake / forest
+        "crop_history": [{"year": h["year"], "crop": h["crop"], "name": h["name"]} for h in history],
+        "detected_rotation": detected,
+        "detected_rotation_fit": fit,          # share of recent years that match the pattern
+        "rotation_used": current,
+        "rotation_source": rotation_source,    # farmer | USDA Cropland Data Layer | default
     }
     response["climate"]["frost"] = frost_dates(daily)
 
